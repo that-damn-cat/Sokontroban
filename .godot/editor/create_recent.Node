@@ -1,0 +1,13 @@
+Label
+ColorRect
+Control
+TileMapLayer
+Actor
+Sprite2D
+AudioStreamPlayer
+Node
+SubViewport
+SubViewportContainer
+Camera2D
+Marker2D
+AnimatedSprite2D

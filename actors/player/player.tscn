@@ -1,0 +1,55 @@
+[gd_scene format=3 uid="uid://vidbmy8y1bt7"]
+
+[ext_resource type="Texture2D" uid="uid://0xarvpfeo5xn" path="res://assets/gfx/player.png" id="1_ilk7j"]
+[ext_resource type="Script" uid="uid://coxy6sqynjib6" path="res://actors/player/player.gd" id="2_ax26v"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_sglur"]
+atlas = ExtResource("1_ilk7j")
+region = Rect2(0, 0, 12, 12)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bls4j"]
+atlas = ExtResource("1_ilk7j")
+region = Rect2(12, 0, 12, 12)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fkugw"]
+atlas = ExtResource("1_ilk7j")
+region = Rect2(24, 0, 12, 12)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8fjmc"]
+atlas = ExtResource("1_ilk7j")
+region = Rect2(36, 0, 12, 12)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_yqjtg"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_sglur")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bls4j")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fkugw")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8fjmc")
+}],
+"loop": 0,
+"name": &"default",
+"speed": 8.0
+}]
+
+[node name="Player" type="AnimatedSprite2D" unique_id=1822535992 node_paths=PackedStringArray("camera_target", "camera") groups=["player"]]
+z_index = 2
+z_as_relative = false
+sprite_frames = SubResource("SpriteFrames_yqjtg")
+script = ExtResource("2_ax26v")
+camera_target = NodePath("CameraTarget")
+camera = NodePath("CameraTarget/Camera2D")
+
+[node name="CameraTarget" type="Marker2D" parent="." unique_id=1283043229]
+gizmo_extents = 12.0
+
+[node name="Camera2D" type="Camera2D" parent="CameraTarget" unique_id=1678174296]
+drag_horizontal_enabled = true
+drag_vertical_enabled = true

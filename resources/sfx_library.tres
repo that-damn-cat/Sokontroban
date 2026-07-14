@@ -1,0 +1,33 @@
+[gd_resource type="Resource" script_class="SfxLib" format=3 uid="uid://fhp4xkll2q6d"]
+
+[ext_resource type="Script" uid="uid://dt7wodrhuf26p" path="res://globals/SfxLib/SfxData.gd" id="1_qr3e3"]
+[ext_resource type="Script" uid="uid://ch18md54m6jhs" path="res://globals/SfxLib/SfxLib.gd" id="2_i1gyi"]
+[ext_resource type="AudioStream" uid="uid://txya8dncwcdp" path="res://assets/sfx/slide.wav" id="3_u3agq"]
+[ext_resource type="AudioStream" uid="uid://c5mwwdm4o8x5" path="res://assets/sfx/bump.wav" id="3_vkf5m"]
+[ext_resource type="AudioStream" uid="uid://rnhx0mjyoc7s" path="res://assets/sfx/level_win.wav" id="4_u3agq"]
+
+[sub_resource type="Resource" id="Resource_u3agq"]
+script = ExtResource("1_qr3e3")
+stream = ExtResource("3_vkf5m")
+pitch_jitter = 0.4
+
+[sub_resource type="Resource" id="Resource_reyff"]
+script = ExtResource("1_qr3e3")
+stream = ExtResource("3_u3agq")
+volume_db = -5.0
+pitch_jitter = 0.07
+metadata/_custom_type_script = "uid://dt7wodrhuf26p"
+
+[sub_resource type="Resource" id="Resource_vkf5m"]
+script = ExtResource("1_qr3e3")
+stream = ExtResource("4_u3agq")
+volume_db = 9.0
+metadata/_custom_type_script = "uid://dt7wodrhuf26p"
+
+[resource]
+script = ExtResource("2_i1gyi")
+library = Dictionary[StringName, ExtResource("1_qr3e3")]({
+&"bump": SubResource("Resource_u3agq"),
+&"level_win": SubResource("Resource_vkf5m"),
+&"slide": SubResource("Resource_reyff")
+})

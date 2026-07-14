@@ -1,0 +1,52 @@
+[gd_scene format=3 uid="uid://cceoyur51rblb"]
+
+[ext_resource type="Texture2D" uid="uid://dw00afx5emt7t" path="res://assets/gfx/crate.png" id="1_ijej8"]
+[ext_resource type="Script" uid="uid://cs0cyg0l70dxb" path="res://actors/crate/crate.gd" id="2_reyff"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ijej8"]
+atlas = ExtResource("1_ijej8")
+region = Rect2(0, 0, 12, 12)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_reyff"]
+atlas = ExtResource("1_ijej8")
+region = Rect2(12, 0, 12, 12)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_npcv8"]
+atlas = ExtResource("1_ijej8")
+region = Rect2(0, 12, 12, 12)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_oqsuw"]
+atlas = ExtResource("1_ijej8")
+region = Rect2(12, 12, 12, 12)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_lqcak"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ijej8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_reyff")
+}],
+"loop": 1,
+"name": &"default",
+"speed": 2.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_npcv8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_oqsuw")
+}],
+"loop": 1,
+"name": &"on_goal",
+"speed": 2.0
+}]
+
+[node name="Crate" type="AnimatedSprite2D" unique_id=1986201678]
+z_as_relative = false
+sprite_frames = SubResource("SpriteFrames_lqcak")
+frame_progress = 0.51789635
+script = ExtResource("2_reyff")
+metadata/_custom_type_script = "uid://b38x2bf45bdft"

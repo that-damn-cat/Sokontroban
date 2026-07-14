@@ -1,0 +1,80 @@
+[gd_scene format=3 uid="uid://but4fypef2swa"]
+
+[ext_resource type="PackedScene" uid="uid://d2un13goeh2id" path="res://scenes/game.tscn" id="1_ig7tw"]
+[ext_resource type="AudioStream" uid="uid://c76ej0e2xbihr" path="res://assets/bgm/extar_midnight_oil.wav" id="2_0xm2m"]
+[ext_resource type="Shader" uid="uid://dl6lgu0naa4er" path="res://shaders/retro.gdshader" id="2_h2yge"]
+[ext_resource type="AudioStream" uid="uid://bglvqs2gakkm2" path="res://assets/bgm/60hz.mp3" id="4_1bvp3"]
+[ext_resource type="AudioStream" uid="uid://bhekntrvdwibp" path="res://assets/bgm/static.mp3" id="5_lquwl"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_lqcak"]
+shader = ExtResource("2_h2yge")
+shader_parameter/overlay = true
+shader_parameter/scanlines_opacity = 0.4
+shader_parameter/scanlines_width = 0.25
+shader_parameter/grille_opacity = 0.2400000114
+shader_parameter/resolution = Vector2(384, 216)
+shader_parameter/pixelate = false
+shader_parameter/roll = false
+shader_parameter/roll_speed = 8.0
+shader_parameter/roll_size = 0.0
+shader_parameter/roll_variation = 5.0
+shader_parameter/distort_intensity = 0.006000000285
+shader_parameter/noise_opacity = 0.20400000969
+shader_parameter/noise_speed = 1.76
+shader_parameter/static_noise_intensity = 0.0800000038
+shader_parameter/aberration = 0.00500004773750006
+shader_parameter/brightness = 1.485
+shader_parameter/discolor = false
+shader_parameter/warp_amount = 0.0800000038
+shader_parameter/clip_warp = false
+shader_parameter/vignette_intensity = 0.695
+shader_parameter/vignette_opacity = 0.3650000173375
+
+[node name="Main" type="Node" unique_id=678261277]
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="." unique_id=408789612]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+stretch = true
+
+[node name="GameViewport" type="SubViewport" parent="SubViewportContainer" unique_id=2023076955]
+handle_input_locally = false
+canvas_item_default_texture_filter = 0
+size = Vector2i(1536, 864)
+size_2d_override = Vector2i(384, 216)
+size_2d_override_stretch = true
+render_target_update_mode = 4
+
+[node name="Game" parent="SubViewportContainer/GameViewport" unique_id=833419358 instance=ExtResource("1_ig7tw")]
+
+[node name="UI" type="Node" parent="." unique_id=689284998]
+
+[node name="RetroFX" type="ColorRect" parent="." unique_id=83901378]
+material = SubResource("ShaderMaterial_lqcak")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="BGM" type="AudioStreamPlayer" parent="." unique_id=434986915]
+stream = ExtResource("2_0xm2m")
+autoplay = true
+bus = &"Music"
+
+[node name="60HzSFX" type="AudioStreamPlayer" parent="." unique_id=1059846830]
+stream = ExtResource("4_1bvp3")
+volume_db = -8.0
+autoplay = true
+bus = &"BGFX"
+parameters/looping = true
+
+[node name="StaticSFX" type="AudioStreamPlayer" parent="." unique_id=230782548]
+stream = ExtResource("5_lquwl")
+volume_db = -10.0
+autoplay = true
+bus = &"BGFX"
+parameters/looping = true

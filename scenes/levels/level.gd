@@ -1,0 +1,128 @@
+class_name Level
+extends TileMapLayer
+
+signal level_complete
+
+var input_tiles: Dictionary[Vector2i, StringName]
+var goal_tiles: Array[Vector2i]
+var _game: Game
+
+func _ready() -> void:
+	_game = get_tree().get_first_node_in_group("game")
+	_game.turn_started.connect(_on_turn_start)
+	_game.turn_finished.connect(_on_turn_finished)
+
+	for cell in get_used_cells():
+		var input_data: StringName = fetch_tile_data(cell, "input_name")
+		var goal_data: bool = fetch_tile_data(cell, "is_goal")
+
+		if input_data != &"":
+			input_tiles[cell] = input_data
+
+		if goal_data:
+			goal_tiles.push_back(cell)
+
+func _use_tile_data_runtime_update(coords: Vector2i) -> bool:
+	return (coords in input_tiles.keys())
+
+func _tile_data_runtime_update(coords: Vector2i, tile_data: TileData) -> void:
+	for actor in _game.get_actors_at_tile(coords):
+		if actor is Crate:
+			tile_data.modulate = Constants.RED_COLOR
+			return
+
+	var default_color: Color = tile_data.get_custom_data("default_modulate")
+	var input_name: StringName = tile_data.get_custom_data("input_name")
+
+	if Input.is_action_pressed(input_name):
+		tile_data.modulate = Constants.HILIGHT_DICT[default_color]
+	else:
+		tile_data.modulate = default_color
+
+
+func is_input_on_map(input_name: StringName) -> bool:
+	return input_tiles.find_key(input_name) != null
+
+func is_input_blocked(input_name: StringName) -> bool:
+	# If the input isn't drawn on the map at all, it's OK
+	if not is_input_on_map(input_name):
+		return false
+
+	# Filter the dict to get a list of cells that match this input
+	var matching_cells = input_tiles.keys().filter(
+		func(key): return input_tiles[key] == input_name
+	)
+
+	# For each match...
+	for match in matching_cells:
+		# Get the list of actors on the same tile
+		var actor_list := _game.get_actors_at_tile(match)
+		for actor in actor_list:
+			# If any of them are a crate, it's blocked
+			if actor is Crate:
+				return true
+
+	# Otherwise it's OK
+	return false
+
+func is_goal_filled(cell) -> bool:
+	if cell not in goal_tiles:
+		return false
+
+	var actor_list := _game.get_actors_at_tile(cell)
+
+	for actor in actor_list:
+		if actor is Crate:
+			return true
+
+	return false
+
+func is_level_complete() -> bool:
+	for goal in goal_tiles:
+		if not is_goal_filled(goal):
+			return false
+
+	return true
+
+func is_tile_walkable(target_tile: Vector2i) -> bool:
+	if not _is_tile_data_valid(target_tile):
+		return(false)
+
+	var walkable = fetch_tile_data(target_tile, "walkable")
+
+	return(walkable or walkable == null)
+
+func fetch_tile_data(target_tile: Vector2i, data_name: String) -> Variant:
+	var tile_data: TileData = get_cell_tile_data(target_tile)
+
+	if tile_data == null:
+		return(null)
+
+	if not tile_data.has_custom_data(data_name):
+		push_warning("Tile missing %s data at %s" % [data_name, target_tile])
+		return(null)
+
+	return(tile_data.get_custom_data(data_name))
+
+func get_tilemap_position(global_pos: Vector2) -> Vector2i:
+	var tilemap_local: Vector2 = to_local(global_pos)
+	return(local_to_map(tilemap_local))
+
+
+func _is_tile_data_valid(target_tile: Vector2i) -> bool:
+	var tile_data: TileData = get_cell_tile_data(target_tile)
+
+	if tile_data == null:
+		push_warning("No Tile Data at %s" % target_tile)
+		return(false)
+
+	return(true)
+
+func _on_turn_start() -> void:
+	notify_runtime_tile_data_update()
+
+func _on_turn_finished() -> void:
+	notify_runtime_tile_data_update()
+
+	if is_level_complete():
+		level_complete.emit()
