@@ -25,3 +25,5 @@ const TURN_TIME_SECONDS: float = 0.25
 
 func _enter_tree() -> void:
 	RenderingServer.set_default_clear_color(BG_COLOR)
+
+const EMPTY_LEVEL_FILE: String = &"res://scenes/levels/empty_level.tscn"

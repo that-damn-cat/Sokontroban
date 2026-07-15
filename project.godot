@@ -19,6 +19,7 @@ config/icon="res://icon.svg"
 
 Constants="*uid://c3qcgyxly0spa"
 SFXService="*uid://bibsi0e8bqr7o"
+LevelManager="*uid://jnexaxvinlu5"
 
 [display]
 

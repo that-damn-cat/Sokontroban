@@ -1,7 +1,11 @@
 class_name Player
 extends Actor
 
-enum InputState {WAITING, POLLING, MOVING}
+enum InputState {
+	WAITING,
+	POLLING,
+	MOVING,
+}
 
 @export_category("Camera")
 @export var camera_target: Marker2D
@@ -12,10 +16,10 @@ enum InputState {WAITING, POLLING, MOVING}
 
 @export_category("Controls")
 @export var input_polling_time: float = 0.06
-var _poll_time_remaining = 0.0
-var _input_state := InputState.WAITING
 
-var _move_tween: Tween
+var _poll_time_remaining := 0.0
+var _input_state := InputState.WAITING
+var _input_direction := Vector2i.ZERO
 
 
 func _enter_tree() -> void:
@@ -23,8 +27,8 @@ func _enter_tree() -> void:
 	if camera == null or camera_target == null:
 		push_error("Player Camera Missing!")
 		return
-	camera_target.global_position = global_position
 
+	camera_target.global_position = global_position
 	camera.position_smoothing_enabled = false
 	camera.global_position = global_position
 	camera.position_smoothing_enabled = true
@@ -34,14 +38,18 @@ func _ready() -> void:
 	super()
 	_game.set_player(self)
 
+	_game.turn_finished.connect(_on_turn_ended)
+	_game.undo_finished.connect(_on_turn_ended)
+	_game.redo_finished.connect(_on_turn_ended)
+
 func _process(delta: float) -> void:
-	if _game.turn_in_process:
+	if _game == null or _game.turn_in_process:
 		return
 
 	match _input_state:
 		InputState.WAITING:
-			move_intent = _poll_direction()
-			if move_intent == Vector2i.ZERO:
+			_input_direction = _poll_direction()
+			if _input_direction == Vector2i.ZERO:
 				return
 
 			_input_state = InputState.POLLING
@@ -49,23 +57,24 @@ func _process(delta: float) -> void:
 
 		InputState.POLLING:
 			_poll_time_remaining -= delta
-			move_intent = _poll_direction()
+			_input_direction = _poll_direction()
 			if _poll_time_remaining <= 0.0:
 				_input_state = InputState.MOVING
 
 		InputState.MOVING:
-			var target_actors := _game.get_actors_at_tile(tile_position + move_intent)
+			var requested_direction := _input_direction
+			_input_direction = Vector2i.ZERO
 
-			for actor in target_actors:
-				if not actor == self:
-					actor.move_intent = move_intent
+			if requested_direction == Vector2i.ZERO:
+				_input_state = InputState.WAITING
+				return
 
-			_game.start_turn()
+			_game.start_turn(requested_direction)
 
 func _poll_direction() -> Vector2i:
 	_game.update_allowed_inputs()
 
-	var direction := move_intent
+	var direction := _input_direction
 
 	if &"left" in _game.allowed_inputs and Input.is_action_pressed(&"left"):
 		direction.x -= 1
@@ -84,60 +93,79 @@ func _poll_direction() -> Vector2i:
 
 	return(direction)
 
-func _do_turn() -> void:
-	is_finished = false
+func capture_turn_state() -> Dictionary[StringName, Variant]:
+	return {&"flip_h": flip_h}
 
-	if move_intent.x > 0:
+func restore_turn_state(state: Dictionary[StringName, Variant]) -> void:
+	flip_h = state.get(&"fliph", flip_h)
+
+func face_direction(direction: Vector2i) -> void:
+	if direction.x > 0:
 		flip_h = false
-	elif move_intent.x < 0:
+	elif direction.x < 0:
 		flip_h = true
 
-	_setup_tween()		# Tween setup ties tween complete to move_finished signal
+func play_move_animation(target_tile: Vector2i, _is_undo: bool = false) -> Tween:
+	var tween := _new_motion_tween()
+	var target_position = _game.get_global_position(target_tile)
 
-	if _move_ok():
-		tile_position = target_tile
-		_tween_move()
-		play("default")
-	else:
-		SFXService.play("bump")
-		_emit_collided()
-		_tween_bounce()
+	play(&"default")
 
-	move_intent = Vector2i.ZERO
+	tween.set_trans(Tween.TRANS_SINE)
+	tween.set_ease(Tween.EASE_IN_OUT)
+	tween.set_parallel()
 
-func _on_move_finished() -> void:
-	_move_tween.finished.disconnect(_on_move_finished)
-	_move_tween.kill()
+	tween.tween_property(
+		self,
+		"global_position",
+		target_position,
+		Constants.TURN_TIME_SECONDS
+	)
+
+	tween.tween_property(
+		camera_target,
+		"global_position",
+		target_position,
+		Constants.TURN_TIME_SECONDS
+	)
+
+	tween.finished.connect(_on_motion_finished, CONNECT_ONE_SHOT)
+
+	return tween
+
+func play_bump_animation(direction: Vector2i) -> Tween:
+	var tween := _new_motion_tween()
+	var start_position := global_position
+	var bump_end := start_position + Vector2(direction) * Constants.TILE_SIZE * bump_ratio
+
+	SFXService.play("bump")
+
+	tween.set_trans(Tween.TRANS_ELASTIC)
+	tween.set_ease(Tween.EASE_OUT)
+	tween.tween_property(
+		self,
+		"global_position",
+		bump_end,
+		0.4 * Constants.TURN_TIME_SECONDS
+	)
+
+	tween.set_trans(Tween.TRANS_ELASTIC)
+	tween.set_ease(Tween.EASE_OUT)
+	tween.tween_property(
+		self,
+		"global_position",
+		start_position,
+		0.6 * Constants.TURN_TIME_SECONDS
+	)
+
+	tween.finished.connect(_on_motion_finished, CONNECT_ONE_SHOT)
+
+	return tween
+
+func _on_motion_finished() -> void:
+	_move_tween = null
 	stop()
+
+func _on_turn_ended() -> void:
+	_input_direction = Vector2i.ZERO
 	_input_state = InputState.WAITING
-	is_finished = true
-	_emit_turn_finished()
-
-func _setup_tween() -> void:
-	if _move_tween:
-		_move_tween.kill()
-
-	_move_tween = create_tween()
-	_move_tween.finished.connect(_on_move_finished)
-
-func _tween_move() -> void:
-	var new_position: Vector2 = global_position + (Vector2(move_intent) * Constants.TILE_SIZE)
-
-	_move_tween.set_trans(Tween.TRANS_SINE)
-	_move_tween.set_ease(Tween.EASE_IN_OUT)
-	_move_tween.set_parallel()
-
-	_move_tween.tween_property(self, "global_position", new_position, Constants.TURN_TIME_SECONDS)
-	_move_tween.tween_property(camera_target, "global_position", new_position, Constants.TURN_TIME_SECONDS)
-
-func _tween_bounce() -> void:
-	var start_position = global_position
-	var bump_end: Vector2 = start_position + (Vector2(move_intent) * Constants.TILE_SIZE * bump_ratio)
-
-	_move_tween.set_trans(Tween.TRANS_ELASTIC)
-	_move_tween.set_ease(Tween.EASE_OUT)
-	_move_tween.tween_property(self, "global_position", bump_end, 0.4 * Constants.TURN_TIME_SECONDS)
-
-	_move_tween.set_trans(Tween.TRANS_SINE)
-	_move_tween.set_ease(Tween.EASE_IN_OUT)
-	_move_tween.tween_property(self, "global_position", start_position, 0.6 * Constants.TURN_TIME_SECONDS)

@@ -2,58 +2,61 @@
 class_name Actor
 extends AnimatedSprite2D
 
-signal turn_finished(actor: Actor)
-signal collided(collided_tile: Vector2i)
-
-var move_intent := Vector2i.ZERO
+## The actor should never mutate its own tile_position!
 var tile_position: Vector2i
-var target_tile: Vector2i:
-	get:
-		return move_intent + tile_position
-
-var is_finished: bool
-
 var _game: Game
-
+var _move_tween: Tween
 
 func _ready() -> void:
-	_game = get_tree().get_first_node_in_group("game")
-	_game.add_actor(self)
-	_game.turn_started.connect(_do_turn)
+	_game = get_tree().get_first_node_in_group("game") as Game
+	if _game == null:
+		push_error("Actor " + self.name + " could not find the Game node!")
+		return
 
+	_game.register_actor(self)
 	tile_position = _game.get_level_position(global_position)
 
 
-## _do_turn MUST result in _emit_turn_finished() being called!
-@abstract func _do_turn() -> void
+func _exit_tree() -> void:
+	if is_instance_valid(_game):
+		_game.unregister_actor(self)
+
+
+func capture_turn_state() -> Dictionary[StringName, Variant]:
+	return {}
+
+func restore_turn_state(_state: Dictionary[StringName, Variant]) -> void:
+	pass
+
+func face_direction(_direction: Vector2i) -> void:
+	pass
 
 func kill() -> void:
 	queue_free()
 
+@abstract func play_move_animation(target_tile: Vector2i, is_undo: bool = false) -> Tween
 
-## Returns the speed multiplier needed for the
-## animation `anim_name` to last `target_duration` seconds.
+@abstract func play_bump_animation(direction: Vector2i) -> Tween
+
+
+func snap_visual_to_tile() -> void:
+	if is_instance_valid(_game):
+		global_position = _game.get_global_position(tile_position)
+
+func _new_motion_tween() -> Tween:
+	if is_instance_valid(_move_tween):
+		_move_tween.kill()
+
+	_move_tween = create_tween()
+	return _move_tween
+
+## Returns the speed multiplier needed for `anim_name` to last `target_duration` seconds.
 func _find_speed_mult(anim_name: StringName, target_duration: float) -> float:
-	return(_get_anim_duration(anim_name) / target_duration)
-
-func _get_anim_duration(anim_name: StringName) -> float:
 	var anim_fps = sprite_frames.get_animation_speed(anim_name)
+	var anim_duration: float = 0.0
 
-	var total: float = 0.0
 	for i in range(sprite_frames.get_frame_count(anim_name)):
-		var frame_duration: float = sprite_frames.get_frame_duration(anim_name, i)
-		total += frame_duration / anim_fps
+		var frame_duration: float = sprite_frames.get_frame_duration(anim_name, is_playing())
+		anim_duration += frame_duration / anim_fps
 
-	return(total)
-
-func _move_ok() -> bool:
-	if move_intent == Vector2i.ZERO:
-		return true
-
-	return _game.is_tile_walkable(target_tile)
-
-func _emit_turn_finished() -> void:
-	turn_finished.emit(self)
-
-func _emit_collided() -> void:
-	collided.emit(target_tile)
+	return(anim_duration / target_duration)
