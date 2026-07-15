@@ -61,13 +61,15 @@ func _ready() -> void:
 func set_game(game: Game) -> void:
 	_game = game
 
-func load_next_level() -> void:
+func load_next_level(with_delay: bool = true) -> void:
 	if _game == null:
 		push_error("Cannot load level: Game has not been set.")
 		return
 
 	clear_level()
-	await get_tree().create_timer(load_delay).timeout   # Delay between blank and load next, for visual distinction between levels
+
+	if with_delay:
+		await get_tree().create_timer(load_delay).timeout   # Delay between blank and load next, for visual distinction between levels
 
 	while true:
 		current_level += 1

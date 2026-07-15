@@ -18,7 +18,7 @@ enum PlaybackKind {
 
 @export var level: Level
 @export var turn_cooldown_seconds: float = 0.05
-@export var max_history_steps: int = 100
+@export var max_history_steps: int = 250
 
 var turn_in_process: bool = false
 var player: Player
@@ -26,6 +26,7 @@ var actors: Array[Actor] = []
 
 var _history: UndoRedo = UndoRedo.new()
 var _playback_kind := PlaybackKind.NONE
+var _level_complete: bool = false
 
 var _input_list: Array[StringName] = [
 	&"up",
@@ -48,12 +49,10 @@ var allowed_inputs: Array[StringName] = [
 func _ready() -> void:
 	LevelManager.set_game(self)
 	LevelManager.levels_exhausted.connect(_on_levels_exhausted)
-	LevelManager.load_next_level()
+	LevelManager.load_next_level(false)
 	await LevelManager.level_loaded
 
 	_history.max_steps = max_history_steps
-
-	level.level_complete.connect(_on_level_complete)
 
 func _exit_tree() -> void:
 	if is_instance_valid(_history):
@@ -161,7 +160,7 @@ func is_input_at_cell(tile: Vector2i) -> bool:
 ## Creates one UndoRedo action for one accepted player input. commit_action()
 ## invokes the registered forward callback.
 func start_turn(direction: Vector2i) -> void:
-	if turn_in_process or direction == Vector2i.ZERO or player == null:
+	if turn_in_process or direction == Vector2i.ZERO or player == null or _level_complete:
 		return
 
 	var action := _build_player_turn(direction)
@@ -300,6 +299,12 @@ func _on_action_playback_finished(_is_undo: bool, _action: TurnAction) -> void:
 		PlaybackKind.REDO:
 			redo_finished.emit()
 
+	if _level_complete:
+		await get_tree().create_timer(1.5).timeout
+		SFXService.stop_all()
+		LevelManager.load_next_level()
+		_level_complete = false
+
 func _begin_playback(kind: PlaybackKind) -> void:
 	turn_in_process = true
 	_playback_kind = kind
@@ -337,7 +342,7 @@ func _direction_name(direction: Vector2i) -> String:
 
 func _on_level_complete() -> void:
 	SFXService.play("level_win")
-	LevelManager.load_next_level()
+	_level_complete = true
 
 func _on_levels_exhausted() -> void:
 	get_tree().quit()
