@@ -341,6 +341,7 @@ func _direction_name(direction: Vector2i) -> String:
 	return result
 
 func _on_level_complete() -> void:
+	SFXService.stop("goal")
 	SFXService.play("level_win")
 	_level_complete = true
 

@@ -65,6 +65,7 @@ func _on_motion_finished() -> void:
 func _update_animation() -> void:
 	if _game.is_goal_at_cell(tile_position):
 		animation = &"on_goal"
+		SFXService.play("goal")
 	else:
 		animation = &"default"
 
