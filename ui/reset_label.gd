@@ -1,50 +1,53 @@
 extends Label
 
-var _held_time: float = 0.0
-var _recent_reset: bool = false
-var _is_held: bool = false
+enum State { IDLE, HOLDING, COOLDOWN }
 
-var max_dots: int = 3
-var dot_timing: Array[float]
-var num_dots: int = 0
+var _state: State = State.IDLE
+var _held_time: float = 0.0
+var _num_dots: int = 0
+
+var dot_timing: Array[float] = []
 
 func _ready() -> void:
 	LevelManager.level_reset.connect(_on_level_reset)
+	_build_dot_timing()
 
-	for i in range(max_dots):
-		dot_timing.append(((float(i) + 1) * Constants.RESET_HOLD_TIME) / (float(max_dots) + 1.0))
+func _build_dot_timing() -> void:
+	var max_dots: int = 3
+	var steps := max_dots + 1
 
-	dot_timing.append(Constants.RESET_HOLD_TIME)
+	dot_timing.clear()
+
+	for i in range(1, steps + 1):
+		dot_timing.append((float(i) * Constants.RESET_HOLD_TIME) / float(steps))
 
 func _input(event: InputEvent) -> void:
-	if event.is_action_released(&"reset"):
-		_recent_reset = false
-		_is_held = false
-		reset_state()
-
 	if event.is_action_pressed(&"reset"):
 		show()
-		_is_held = true
+		_state = State.HOLDING
+		_reset_progress()
 
+	elif event.is_action_released(&"reset"):
+		hide()
+		_state = State.IDLE
+		_reset_progress()
 
 func _process(delta: float) -> void:
-	if not _is_held or _recent_reset:
+	if _state != State.HOLDING:
 		return
 
-
-	print(dot_timing)
 	_held_time += delta
 
-	if _held_time >= dot_timing[num_dots]:
+	if _num_dots < dot_timing.size() and _held_time >= dot_timing[_num_dots]:
 		text += "."
-		num_dots += 1
+		_num_dots += 1
 
-func reset_state() -> void:
-	hide()
+func _reset_progress() -> void:
 	text = "Resetting"
 	_held_time = 0.0
-	num_dots = 0
+	_num_dots = 0
 
 func _on_level_reset() -> void:
-	_recent_reset = true
-	reset_state()
+	_state = State.COOLDOWN
+	hide()
+	_reset_progress()
