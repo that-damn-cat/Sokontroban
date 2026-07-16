@@ -66,6 +66,9 @@ func load_next_level(with_delay: bool = true) -> void:
 		push_error("Cannot load level: Game has not been set.")
 		return
 
+	if with_delay:
+		SFXService.play("floppy")
+
 	clear_level()
 
 	if with_delay:

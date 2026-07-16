@@ -6,6 +6,7 @@
 [ext_resource type="AudioStream" uid="uid://c5mwwdm4o8x5" path="res://assets/sfx/bump.wav" id="3_vkf5m"]
 [ext_resource type="AudioStream" uid="uid://rnhx0mjyoc7s" path="res://assets/sfx/level_win.wav" id="4_u3agq"]
 [ext_resource type="AudioStream" uid="uid://blyqtofak12j1" path="res://assets/sfx/goal.wav" id="5_q6yf4"]
+[ext_resource type="AudioStream" uid="uid://1rxabk371sme" path="res://assets/sfx/floppy.wav" id="6_lpt8l"]
 
 [sub_resource type="Resource" id="Resource_u3agq"]
 script = ExtResource("1_qr3e3")
@@ -30,10 +31,17 @@ script = ExtResource("1_qr3e3")
 stream = ExtResource("5_q6yf4")
 metadata/_custom_type_script = "uid://dt7wodrhuf26p"
 
+[sub_resource type="Resource" id="Resource_yqjtg"]
+script = ExtResource("1_qr3e3")
+stream = ExtResource("6_lpt8l")
+volume_db = 4.200000000000003
+metadata/_custom_type_script = "uid://dt7wodrhuf26p"
+
 [resource]
 script = ExtResource("2_i1gyi")
 library = Dictionary[StringName, ExtResource("1_qr3e3")]({
 &"bump": SubResource("Resource_u3agq"),
+&"floppy": SubResource("Resource_yqjtg"),
 &"goal": SubResource("Resource_2dq4g"),
 &"level_win": SubResource("Resource_vkf5m"),
 &"slide": SubResource("Resource_reyff")
