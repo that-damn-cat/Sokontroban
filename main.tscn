@@ -2,9 +2,15 @@
 
 [ext_resource type="PackedScene" uid="uid://d2un13goeh2id" path="res://scenes/game.tscn" id="1_ig7tw"]
 [ext_resource type="AudioStream" uid="uid://c76ej0e2xbihr" path="res://assets/bgm/extar_midnight_oil.wav" id="2_0xm2m"]
+[ext_resource type="Script" uid="uid://dg5q88q00q7e4" path="res://ui/turn_number_label.gd" id="2_7mycd"]
+[ext_resource type="FontFile" uid="uid://drthcd0jndmhp" path="res://assets/fonts/Everyday_Slight_Original.ttf" id="2_272bh"]
 [ext_resource type="Shader" uid="uid://dl6lgu0naa4er" path="res://shaders/retro.gdshader" id="2_h2yge"]
 [ext_resource type="AudioStream" uid="uid://bglvqs2gakkm2" path="res://assets/bgm/60hz.mp3" id="4_1bvp3"]
+[ext_resource type="Script" uid="uid://b7geaivhc6qh0" path="res://ui/loading_label.gd" id="4_5vw27"]
+[ext_resource type="FontFile" uid="uid://cr3vfu8wn8l5p" path="res://assets/fonts/Everyday_Typical_Bold.ttf" id="4_kek77"]
 [ext_resource type="AudioStream" uid="uid://bhekntrvdwibp" path="res://assets/bgm/static.mp3" id="5_lquwl"]
+[ext_resource type="Script" uid="uid://dws4wtexwqcex" path="res://ui/reset_label.gd" id="6_4c57u"]
+[ext_resource type="FontFile" uid="uid://cs0eg3xve08ll" path="res://assets/fonts/Everyday_Typical_Black.ttf" id="6_efxa6"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_lqcak"]
 shader = ExtResource("2_h2yge")
@@ -39,18 +45,73 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 stretch = true
+stretch_shrink = 4
 
 [node name="GameViewport" type="SubViewport" parent="SubViewportContainer" unique_id=2023076955]
 handle_input_locally = false
 canvas_item_default_texture_filter = 0
-size = Vector2i(1536, 864)
-size_2d_override = Vector2i(384, 216)
-size_2d_override_stretch = true
+size = Vector2i(384, 216)
 render_target_update_mode = 4
 
 [node name="Game" parent="SubViewportContainer/GameViewport" unique_id=833419358 instance=ExtResource("1_ig7tw")]
 
-[node name="UI" type="Node" parent="." unique_id=689284998]
+[node name="CanvasLayer" type="CanvasLayer" parent="SubViewportContainer/GameViewport" unique_id=489632269]
+
+[node name="TurnCountContainer" type="MarginContainer" parent="SubViewportContainer/GameViewport/CanvasLayer" unique_id=83411827]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 18
+theme_override_constants/margin_top = 18
+theme_override_constants/margin_right = 18
+theme_override_constants/margin_bottom = 18
+
+[node name="TurnCounter" type="Label" parent="SubViewportContainer/GameViewport/CanvasLayer/TurnCountContainer" unique_id=1573518456]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+theme_override_colors/font_color = Color(0.07058824, 0.53333336, 0.28627452, 1)
+theme_override_fonts/font = ExtResource("2_272bh")
+theme_override_font_sizes/font_size = 10
+text = "Turn 0"
+script = ExtResource("2_7mycd")
+
+[node name="LoadingContainer" type="CenterContainer" parent="SubViewportContainer/GameViewport/CanvasLayer" unique_id=168188937]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="LoadingLabel" type="Label" parent="SubViewportContainer/GameViewport/CanvasLayer/LoadingContainer" unique_id=1670194266]
+visible = false
+layout_mode = 2
+theme_override_colors/font_color = Color(0.07058824, 0.53333336, 0.28627452, 1)
+theme_override_fonts/font = ExtResource("4_kek77")
+theme_override_font_sizes/font_size = 14
+text = "Loading..."
+script = ExtResource("4_5vw27")
+
+[node name="ResetContainer" type="CenterContainer" parent="SubViewportContainer/GameViewport/CanvasLayer" unique_id=2103557865]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ResetLabel" type="Label" parent="SubViewportContainer/GameViewport/CanvasLayer/ResetContainer" unique_id=1708257448]
+visible = false
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9882353, 0.9882353, 0.9490196, 1)
+theme_override_colors/font_outline_color = Color(0.0627451, 0.0627451, 0.0627451, 1)
+theme_override_constants/line_spacing = 6
+theme_override_constants/outline_size = 6
+theme_override_fonts/font = ExtResource("6_efxa6")
+theme_override_font_sizes/font_size = 14
+text = "Resetting"
+script = ExtResource("6_4c57u")
 
 [node name="RetroFX" type="ColorRect" parent="." unique_id=83901378]
 material = SubResource("ShaderMaterial_lqcak")

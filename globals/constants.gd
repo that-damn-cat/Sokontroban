@@ -22,6 +22,7 @@ const BGM_BUS: StringName = &"Music"
 
 # Game Config
 const TURN_TIME_SECONDS: float = 0.25
+const RESET_HOLD_TIME: float = 1.25
 
 func _enter_tree() -> void:
 	RenderingServer.set_default_clear_color(BG_COLOR)

@@ -3,12 +3,17 @@ extends Node
 signal levels_exhausted
 signal level_cleared
 signal level_loaded
+signal turn_updated
+signal level_reset
 
 var _game: Game
 var current_level: int = -1
 var level_list: Array[PackedScene] = []
 var load_delay: float = 1.2
 var empty_level_scene: PackedScene = preload(Constants.EMPTY_LEVEL_FILE)
+var turn: int = 0
+
+var _reset_held_time: float = 0.0
 
 func _ready() -> void:
 	var dir := DirAccess.open("res://scenes/levels")
@@ -57,9 +62,32 @@ func _ready() -> void:
 		var level_number: int = level_data["level_number"]
 		level_list[level_number] = level_data["scene"]
 
+func _process(delta: float) -> void:
+	if Input.is_action_pressed(&"reset"):
+		_reset_held_time += delta
+	else:
+		_reset_held_time = 0.0
+		return
+
+	if _reset_held_time >= Constants.RESET_HOLD_TIME:
+		clear_level()
+		_load_level(current_level)
+		level_reset.emit()
+
 
 func set_game(game: Game) -> void:
 	_game = game
+	game.turn_finished.connect(turn_increase)
+	game.undo_finished.connect(turn_decrease)
+	game.redo_finished.connect(turn_increase)
+
+func turn_increase() -> void:
+	turn += 1
+	turn_updated.emit()
+
+func turn_decrease() -> void:
+	turn -= 1
+	turn_updated.emit()
 
 func load_next_level(with_delay: bool = true) -> void:
 	if _game == null:
@@ -69,7 +97,8 @@ func load_next_level(with_delay: bool = true) -> void:
 	if with_delay:
 		SFXService.play("floppy")
 
-	clear_level()
+	if is_instance_valid(_game.level):
+		clear_level()
 
 	if with_delay:
 		await get_tree().create_timer(load_delay).timeout   # Delay between blank and load next, for visual distinction between levels
@@ -78,7 +107,9 @@ func load_next_level(with_delay: bool = true) -> void:
 		current_level += 1
 
 		if current_level >= level_list.size():
-			_game.add_child(empty_level_scene.instantiate())
+			var level = empty_level_scene.instantiate()
+			_game.add_child(level)
+			_game.move_child(level, 0)
 			levels_exhausted.emit()
 			return
 
@@ -93,6 +124,9 @@ func clear_level() -> void:
 		connection["signal"].disconnect(connection["callable"])
 
 	_game.level.free()
+
+	turn = 0
+	turn_updated.emit()
 
 	level_cleared.emit()
 
@@ -112,6 +146,7 @@ func _load_level(level_number: int) -> bool:
 
 	var level: Level = level_scene.instantiate()
 	_game.add_child(level)
+	_game.move_child(level, 0)
 	_game.level = level
 	level.level_complete.connect(_game._on_level_complete)
 	level_loaded.emit()
