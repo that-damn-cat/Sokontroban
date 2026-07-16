@@ -10,7 +10,6 @@
 [ext_resource type="FontFile" uid="uid://cr3vfu8wn8l5p" path="res://assets/fonts/Everyday_Typical_Bold.ttf" id="4_kek77"]
 [ext_resource type="AudioStream" uid="uid://bhekntrvdwibp" path="res://assets/bgm/static.mp3" id="5_lquwl"]
 [ext_resource type="Script" uid="uid://dws4wtexwqcex" path="res://ui/reset_label.gd" id="6_4c57u"]
-[ext_resource type="FontFile" uid="uid://cs0eg3xve08ll" path="res://assets/fonts/Everyday_Typical_Black.ttf" id="6_efxa6"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_lqcak"]
 shader = ExtResource("2_h2yge")
@@ -108,7 +107,7 @@ theme_override_colors/font_color = Color(0.9882353, 0.9882353, 0.9490196, 1)
 theme_override_colors/font_outline_color = Color(0.0627451, 0.0627451, 0.0627451, 1)
 theme_override_constants/line_spacing = 6
 theme_override_constants/outline_size = 6
-theme_override_fonts/font = ExtResource("6_efxa6")
+theme_override_fonts/font = ExtResource("4_kek77")
 theme_override_font_sizes/font_size = 14
 text = "Resetting"
 script = ExtResource("6_4c57u")
