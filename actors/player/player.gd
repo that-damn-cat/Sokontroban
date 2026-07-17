@@ -97,7 +97,7 @@ func capture_turn_state() -> Dictionary[StringName, Variant]:
 	return {&"flip_h": flip_h}
 
 func restore_turn_state(state: Dictionary[StringName, Variant]) -> void:
-	flip_h = state.get(&"fliph", flip_h)
+	flip_h = state.get(&"flip_h", flip_h)
 
 func face_direction(direction: Vector2i) -> void:
 	if direction.x > 0:

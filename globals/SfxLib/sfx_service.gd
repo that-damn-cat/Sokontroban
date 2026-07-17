@@ -16,7 +16,7 @@ func _enter_tree() -> void:
 		sfx_players[key] = player_array
 
 func play(sfx_name: StringName) -> void:
-	if sfx_name not in sfx_players:
+	if not has_sfx(sfx_name):
 		push_warning("SFX %s not found!" % sfx_name)
 		return
 
@@ -27,6 +27,9 @@ func play(sfx_name: StringName) -> void:
 		return
 
 	target_player.play_jitter()
+
+func has_sfx(sfx_name: StringName) -> bool:
+	return (not sfx_name == &"") and (sfx_name in sfx_players)
 
 func pause(sfx_name: StringName) -> void:
 	_for_each_player(_pause_player, sfx_name)
@@ -50,7 +53,7 @@ func _for_each_player(action: Callable, sfx_name: StringName = &"") -> void:
 	var array_list: Array = []
 
 	if sfx_name != &"":
-		if sfx_name not in sfx_players:
+		if not has_sfx(sfx_name):
 			push_warning("SFX %s not found!" % sfx_name)
 			return
 
