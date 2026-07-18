@@ -4,10 +4,19 @@ extends Actor
 @export_category("Visuals")
 @export_range(0.0, 1.0, 0.05) var bump_ratio: float = 0.25
 
+var _was_on_goal: bool = false
+
 func _ready() -> void:
 	super()
-	_update_animation()
-	_game.level.notify_runtime_tile_data_update()
+
+	if not is_instance_valid(_game):
+		return
+
+	_was_on_goal = _game.is_goal_at_cell(tile_position)
+	_update_animation(false)
+
+	if is_instance_valid(_game.level):
+		_game.level.notify_runtime_tile_data_update()
 
 func play_move_animation(target_tile: Vector2i, is_undo: bool = false) -> Tween:
 	var tween := _new_motion_tween()
@@ -28,7 +37,6 @@ func play_move_animation(target_tile: Vector2i, is_undo: bool = false) -> Tween:
 	)
 
 	tween.finished.connect(_on_motion_finished, CONNECT_ONE_SHOT)
-
 	return tween
 
 func play_bump_animation(direction: Vector2i) -> Tween:
@@ -39,7 +47,6 @@ func play_bump_animation(direction: Vector2i) -> Tween:
 	z_index = 1
 
 	tween.tween_interval(0.25 * Constants.TURN_TIME_SECONDS)
-
 	_move_tween.set_trans(Tween.TRANS_ELASTIC)
 	_move_tween.set_ease(Tween.EASE_OUT)
 	_move_tween.tween_property(
@@ -59,20 +66,25 @@ func play_bump_animation(direction: Vector2i) -> Tween:
 	)
 
 	tween.finished.connect(_on_motion_finished, CONNECT_ONE_SHOT)
-
 	return tween
 
 func _on_motion_finished() -> void:
-	_move_tween.kill()
+	_move_tween = null
 	z_index = 0
-	_update_animation()
+	_update_animation(true)
 
-func _update_animation() -> void:
-	if _game.is_goal_at_cell(tile_position):
+func _update_animation(play_goal_sound: bool) -> void:
+	var is_on_goal := _game.is_goal_at_cell(tile_position)
+
+	if is_on_goal:
 		animation = &"on_goal"
-		SFXService.play("goal")
+		if play_goal_sound and not _was_on_goal:
+			SFXService.play("goal")
+
 	else:
 		animation = &"default"
+
+	_was_on_goal = is_on_goal
 
 	if _game.is_input_at_cell(tile_position):
 		frame = 1

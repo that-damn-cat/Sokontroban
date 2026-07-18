@@ -4,32 +4,40 @@ var sfx_players: Dictionary[StringName, Array] = {}
 var sfx_data: Dictionary[StringName, SfxData] = {}
 
 func _enter_tree() -> void:
-	var lib := Constants.SFX_LIBRARY.library as Dictionary[StringName, SfxData]
+	process_mode = PROCESS_MODE_ALWAYS
+	sfx_players.clear()
+	sfx_data.clear()
 
-	for key in lib.keys():
-		var data: SfxData = lib[key]
+	if Constants.SFX_LIBRARY == null:
+		push_error("SFX Library resource is missing!")
+		return
+
+	for key in Constants.SFX_LIBRARY.library:
+		var data: SfxData = Constants.SFX_LIBRARY.library[key]
+		if data == null or data.stream == null:
+			push_warning("SFX %s has no audio stream!" % key)
+			continue
+
 		sfx_data[key] = data
-
-		var player_array: Array[AudioJitterPlayer] = []
-		player_array.append(_create_player(data))
-
-		sfx_players[key] = player_array
+		sfx_players[key] = [_create_player(data)]
 
 func play(sfx_name: StringName) -> void:
 	if not has_sfx(sfx_name):
-		push_warning("SFX %s not found!" % sfx_name)
+		if sfx_name != &"":
+			push_warning("SFX %s not found!" % sfx_name)
 		return
 
-	var target_player: AudioJitterPlayer = _get_free_player(sfx_name)
+	var target_player := _get_free_player(sfx_name)
 
 	if target_player == null:
 		push_warning("SFX %s exceeded max polyphony" % sfx_name)
 		return
 
+	target_player.stream_paused = false
 	target_player.play_jitter()
 
 func has_sfx(sfx_name: StringName) -> bool:
-	return (not sfx_name == &"") and (sfx_name in sfx_players)
+	return sfx_name != &"" and sfx_players.has(sfx_name)
 
 func pause(sfx_name: StringName) -> void:
 	_for_each_player(_pause_player, sfx_name)
@@ -57,13 +65,17 @@ func _for_each_player(action: Callable, sfx_name: StringName = &"") -> void:
 			push_warning("SFX %s not found!" % sfx_name)
 			return
 
-		array_list = [sfx_players[sfx_name] as Array[AudioJitterPlayer]]
+		array_list.append(sfx_players[sfx_name])
 	else:
 		array_list = sfx_players.values()
 
-	for player_array: Array[AudioJitterPlayer] in array_list:
-		for player in player_array:
-			action.call(player)
+	for player_array_variant in array_list:
+		var player_array: Array = player_array_variant
+
+		for player_variant in player_array:
+			var player := player_variant as AudioJitterPlayer
+			if is_instance_valid(player):
+				action.call(player)
 
 func _pause_player(player: AudioJitterPlayer) -> void:
 	player.stream_paused = true
@@ -75,23 +87,22 @@ func _stop_player(player: AudioJitterPlayer) -> void:
 	player.stop()
 
 func _get_free_player(sfx_name: StringName) -> AudioJitterPlayer:
-	if sfx_name not in sfx_data:
-		push_warning("SfxData missing for %s" % sfx_name)
+	if not sfx_data.has(sfx_name):
 		return null
 
-	var player_array: Array[AudioJitterPlayer] = sfx_players[sfx_name]
+	var player_array: Array = sfx_players[sfx_name]
 
-	for player in player_array:
-		if not player.playing:
-			return(player)
+	for player_variant in player_array:
+		var player := player_variant as AudioJitterPlayer
+		if is_instance_valid(player) and not player.playing:
+			return player
 
 	if player_array.size() >= Constants.MAX_PLAYERS_PER_SFX:
-		return(null)
+		return null
 
-	var new_player: AudioJitterPlayer = _create_player(sfx_data[sfx_name])
+	var new_player := _create_player(sfx_data[sfx_name])
 	player_array.append(new_player)
-
-	return(new_player)
+	return new_player
 
 func _create_player(data: SfxData) -> AudioJitterPlayer:
 	var new_player := AudioJitterPlayer.new()

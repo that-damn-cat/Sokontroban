@@ -3,6 +3,8 @@
 [ext_resource type="Texture2D" uid="uid://cn5jvipeic1db" path="res://assets/gfx/button_9_tile.png" id="1_aggc4"]
 
 [resource]
+content_margin_top = 1.0
+content_margin_bottom = 0.0
 texture = ExtResource("1_aggc4")
 texture_margin_left = 12.0
 texture_margin_top = 12.0

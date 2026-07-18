@@ -20,7 +20,7 @@ func play_jitter(from_position: float = 0.0) -> void:
 
 func _get_jittered_pitch() -> float:
 	if jitter <= 0.0:
-		return(_base_pitch)
+		return _base_pitch
 
 	var factor := randf_range(-jitter, jitter)
-	return(_base_pitch * (1.0 + factor))
+	return _base_pitch * (1.0 + factor)

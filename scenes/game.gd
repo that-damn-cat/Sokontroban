@@ -8,6 +8,7 @@ signal undo_finished
 signal redo_started
 signal redo_finished
 signal history_changed(can_undo: bool, can_redo: bool)
+signal level_completed(level_number: int, score: int)
 
 enum PlaybackKind {
 	NONE,
@@ -17,40 +18,25 @@ enum PlaybackKind {
 }
 
 @export var level: Level
-@export var turn_cooldown_seconds: float = 0.05
+@export var turn_cooldown_seconds: float = Constants.TURN_COOLDOWN_SECONDS
 @export var max_history_steps: int = 250
 
+var gameplay_enabled: bool = false
 var turn_in_process: bool = false
 var player: Player
 var actors: Array[Actor] = []
+var allowed_inputs: Array[StringName] = []
 
 var _history: UndoRedo = UndoRedo.new()
 var _playback_kind := PlaybackKind.NONE
+var _playback_generation: int = 0
 var _level_complete: bool = false
-
-var _input_list: Array[StringName] = [
-	&"up",
-	&"down",
-	&"left",
-	&"right",
-	&"reset",
-	&"undo",
-]
-
-var allowed_inputs: Array[StringName] = [
-	&"up",
-	&"down",
-	&"left",
-	&"right",
-	&"reset",
-	&"undo",
-]
 
 func _ready() -> void:
 	_history.max_steps = max_history_steps
-
+	set_level(level)
 	LevelManager.set_game(self)
-	LevelManager.levels_exhausted.connect(_on_levels_exhausted)
+	update_allowed_inputs()
 
 func _exit_tree() -> void:
 	if is_instance_valid(_history):
@@ -58,14 +44,37 @@ func _exit_tree() -> void:
 		_history.free()
 
 func _unhandled_input(event: InputEvent) -> void:
+	if not gameplay_enabled or _level_complete:
+		return
+
 	if event is InputEventKey and event.echo:
 		return
 
 	if event.is_action_pressed(&"undo"):
 		undo_turn()
 		get_viewport().set_input_as_handled()
+
+
+func set_level(new_level: Level) -> void:
+	level = new_level
+
+	if not is_instance_valid(level):
 		return
 
+	if not level.level_complete.is_connected(_on_level_complete):
+		level.level_complete.connect(_on_level_complete)
+
+func set_gameplay_enabled(enabled: bool) -> void:
+	gameplay_enabled = enabled
+
+	if not enabled:
+		_reset_allowed_inputs()
+		if is_instance_valid(player):
+			player.reset_input_buffer()
+		if is_instance_valid(level):
+			level.clear_input_feedback()
+	else:
+		update_allowed_inputs()
 
 func set_player(new_player: Player) -> void:
 	player = new_player
@@ -92,6 +101,7 @@ func remove_actor(actor: Actor) -> void:
 		return
 
 	detach_actor(actor)
+
 	if is_instance_valid(actor):
 		actor.kill()
 
@@ -141,27 +151,63 @@ func get_actors_at_tile(tile: Vector2i) -> Array[Actor]:
 	return result
 
 func get_level_position(world_position: Vector2) -> Vector2i:
+	if not is_instance_valid(level):
+		return Vector2i.ZERO
+
 	return level.get_tilemap_position(world_position)
 
 func get_global_position(tile: Vector2i) -> Vector2:
+	if not is_instance_valid(level):
+		return Vector2.ZERO
+
 	return level.to_global(level.map_to_local(tile))
 
 func is_tile_walkable(tile: Vector2i) -> bool:
-	if not level.is_tile_walkable(tile):
+	if not is_instance_valid(level) or not level.is_tile_walkable(tile):
 		return false
 
 	return get_actors_at_tile(tile).is_empty()
 
 func is_goal_at_cell(tile: Vector2i) -> bool:
+	if not is_instance_valid(level):
+		return false
+
 	return tile in level.goal_tiles
 
 func is_input_at_cell(tile: Vector2i) -> bool:
+	if not is_instance_valid(level):
+		return false
+
 	return tile in level.input_tiles
+
+func is_input_allowed(input_name: StringName) -> bool:
+	if not is_instance_valid(level):
+		return false
+
+	return not level.is_input_blocked(input_name)
+
+func update_allowed_inputs() -> void:
+	allowed_inputs.clear()
+
+	if not is_instance_valid(level):
+		return
+
+	for input_name in Constants.INPUT_LIST:
+		if is_input_allowed(input_name):
+			allowed_inputs.append(input_name)
 
 ## Creates one UndoRedo action for one accepted player input. commit_action()
 ## invokes the registered forward callback.
 func start_turn(direction: Vector2i) -> void:
-	if turn_in_process or direction == Vector2i.ZERO or player == null or _level_complete:
+	if (
+		not gameplay_enabled
+		or turn_in_process
+		or direction == Vector2i.ZERO
+		or not is_instance_valid(player)
+		or not is_instance_valid(level)
+		or _level_complete
+		or not _is_direction_allowed(direction)
+	):
 		return
 
 	var action := _build_player_turn(direction)
@@ -169,7 +215,6 @@ func start_turn(direction: Vector2i) -> void:
 		return
 
 	level.update_last_direction(direction)
-
 	_begin_playback(PlaybackKind.NEW_TURN)
 	turn_started.emit()
 
@@ -178,11 +223,16 @@ func start_turn(direction: Vector2i) -> void:
 	_history.add_undo_method(_play_history_action.bind(action, true))
 	action.register_history_references(_history)
 	_history.commit_action()
-
 	_emit_history_changed()
 
 func undo_turn() -> void:
-	if turn_in_process or not _history.has_undo():
+	if (
+		not gameplay_enabled
+		or _level_complete
+		or turn_in_process
+		or not _history.has_undo()
+		or not is_input_allowed(&"undo")
+	):
 		return
 
 	_begin_playback(PlaybackKind.UNDO)
@@ -195,7 +245,12 @@ func undo_turn() -> void:
 	_emit_history_changed()
 
 func redo_turn() -> void:
-	if turn_in_process or not _history.has_redo():
+	if (
+		not gameplay_enabled
+		or _level_complete
+		or turn_in_process
+		or not _history.has_redo()
+	):
 		return
 
 	_begin_playback(PlaybackKind.REDO)
@@ -227,18 +282,21 @@ func get_redo_action_name() -> String:
 	return _history.get_action_name(redo_index)
 
 func clear_turn_history() -> void:
-	if turn_in_process:
-		return
-
 	_history.clear_history()
 	_emit_history_changed()
 
-func update_allowed_inputs():
-	allowed_inputs = []
+func prepare_for_level_change() -> void:
+	_playback_generation += 1
+	turn_in_process = false
+	_playback_kind = PlaybackKind.NONE
+	_level_complete = false
 
-	for input_name in _input_list:
-		if not level.is_input_blocked(input_name):
-			allowed_inputs.append(input_name)
+	for actor in actors:
+		if is_instance_valid(actor):
+			actor.cancel_motion()
+
+	clear_turn_history()
+	_reset_allowed_inputs()
 
 
 func _build_player_turn(direction: Vector2i) -> TurnAction:
@@ -280,14 +338,21 @@ func _build_player_turn(direction: Vector2i) -> TurnAction:
 
 ## UndoRedo calls this method, but cannot do awaits, so TurnAction handles Tweens
 func _play_history_action(action: TurnAction, is_undo: bool) -> void:
-	action.playback_finished.connect(_on_action_playback_finished.bind(action), CONNECT_ONE_SHOT)
+	var generation := _playback_generation
+	action.playback_finished.connect(_on_action_playback_finished.bind(generation),	CONNECT_ONE_SHOT)
 	action.play(self, is_undo)
 
-func _on_action_playback_finished(_is_undo: bool, _action: TurnAction) -> void:
+func _on_action_playback_finished(_is_undo: bool, generation: int) -> void:
+	if generation != _playback_generation:
+		return
+
 	var completed_kind := _playback_kind
 
 	if turn_cooldown_seconds > 0.0:
-		await get_tree().create_timer(turn_cooldown_seconds).timeout
+		await get_tree().create_timer(turn_cooldown_seconds, false).timeout
+
+	if generation != _playback_generation:
+		return
 
 	_playback_kind = PlaybackKind.NONE
 	turn_in_process = false
@@ -300,13 +365,13 @@ func _on_action_playback_finished(_is_undo: bool, _action: TurnAction) -> void:
 		PlaybackKind.REDO:
 			redo_finished.emit()
 
-	if _level_complete:
-		await get_tree().create_timer(1.5).timeout
-		SFXService.stop_all()
-		LevelManager.load_next_level()
-		_level_complete = false
+	if gameplay_enabled:
+		update_allowed_inputs()
+	else:
+		_reset_allowed_inputs()
 
 func _begin_playback(kind: PlaybackKind) -> void:
+	_playback_generation += 1
 	turn_in_process = true
 	_playback_kind = kind
 
@@ -316,6 +381,18 @@ func _abort_playback() -> void:
 
 func _emit_history_changed() -> void:
 	history_changed.emit(_history.has_undo(), _history.has_redo())
+
+func _is_direction_allowed(direction: Vector2i) -> bool:
+	if direction.x < 0 and not is_input_allowed(&"left"):
+		return false
+	if direction.x > 0 and not is_input_allowed(&"right"):
+		return false
+	if direction.y < 0 and not is_input_allowed(&"up"):
+		return false
+	if direction.y > 0 and not is_input_allowed(&"down"):
+		return false
+
+	return true
 
 func _direction_name(direction: Vector2i) -> String:
 	var parts: Array[String] = []
@@ -333,20 +410,20 @@ func _direction_name(direction: Vector2i) -> String:
 	if parts.is_empty():
 		return "neutral"
 
-	var result := ""
-	for part in parts:
-		if not result.is_empty():
-			result += "-"
-		result += part
-
-	return result
+	return "-".join(PackedStringArray(parts))
 
 func _on_level_complete() -> void:
-	SFXService.stop("goal")
-	SFXService.play("level_win")
-	SaveDataManager.update_score(level.level_number, LevelManager.turn)
-	_level_complete = true
+	if _level_complete or not is_instance_valid(level):
+		return
 
-func _on_levels_exhausted() -> void:
-	SaveDataManager.set_victory()
-	get_tree().quit()
+	_level_complete = true
+	SFXService.stop(&"goal")
+	SFXService.play(&"level_win")
+
+	var level_number := level.level_number
+	var score := LevelManager.turn
+	SaveDataManager.update_score(level_number, score)
+	level_completed.emit(level_number, score)
+
+func _reset_allowed_inputs() -> void:
+	allowed_inputs.clear()

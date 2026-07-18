@@ -69,7 +69,7 @@ func _on_tween_finished(generation: int, is_undo: bool) -> void:
 
 	_pending_tween_count -= 1
 
-	if _pending_tween_count == 0:
+	if _pending_tween_count <= 0:
 		_emit_playback_finished.call_deferred(generation, is_undo)
 
 func _emit_playback_finished(generation: int, is_undo: bool) -> void:
