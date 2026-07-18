@@ -2,6 +2,7 @@ extends Node
 
 # Graphics
 const TILE_SIZE: int = 12
+const INTERNAL_SIZE := Vector2i(384, 216)
 const TILE_CENTER_OFFSET := Vector2(6.0, 6.0)
 const BG_COLOR := Color("#101010")
 const RED_COLOR := Color("#da291c")

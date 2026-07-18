@@ -189,18 +189,19 @@ func _discover_levels() -> void:
 	_level_titles.clear()
 	level_numbers.clear()
 
-	var directory := DirAccess.open(Constants.LEVEL_DIRECTORY)
-	if directory == null:
+	var directory := ResourceLoader.list_directory(Constants.LEVEL_DIRECTORY)
+
+	if directory.size() <= 0:
 		push_error("Could not open level directory: %s" % Constants.LEVEL_DIRECTORY)
 		catalog_ready.emit()
 		return
 
-	for file_name in directory.get_files():
+	for file_name in directory:
 		if not file_name.ends_with(".tscn"):
 			continue
 
 		var scene_path := Constants.LEVEL_DIRECTORY.path_join(file_name)
-		var scene := load(scene_path) as PackedScene
+		var scene := ResourceLoader.load(scene_path) as PackedScene
 
 		if scene == null:
 			push_warning("Could not load level scene: %s" % scene_path)

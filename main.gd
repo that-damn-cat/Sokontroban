@@ -15,6 +15,8 @@ enum AppState {
 signal state_changed(new_state: AppState)
 
 @export var level_complete_delay: float = Constants.LEVEL_COMPLETE_DELAY
+@export var subviewport_container: SubViewportContainer
+@export var retro_fx: ColorRect
 
 @onready var game: Game = $SubViewportContainer/GameViewport/Game
 @onready var hud: Control = $SubViewportContainer/GameViewport/CanvasLayer/HUD
@@ -47,6 +49,9 @@ func _ready() -> void:
 
 	_force_unpause()
 	_set_state(AppState.MAIN_MENU)
+
+	get_window().size_changed.connect(_update_integer_scaling)
+	call_deferred("_update_integer_scaling")
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -114,9 +119,7 @@ func _connect_screen_signals() -> void:
 
 
 func _on_start_requested() -> void:
-	var level_number := SaveDataManager.get_continue_level(
-		LevelManager.get_level_numbers()
-	)
+	var level_number := SaveDataManager.get_continue_level(LevelManager.get_level_numbers())
 
 	if level_number < 0:
 		push_error("No playable levels were discovered.")
@@ -326,3 +329,24 @@ func _focus_current_screen() -> void:
 		AppState.PAUSED, AppState.OPTIONS:
 			if is_instance_valid(pause_first_focus):
 				pause_first_focus.grab_focus()
+
+func _update_integer_scaling() -> void:
+	var available_size := get_window().size
+
+	var scale_factor := floori(minf(
+		float(available_size.x) / float(Constants.INTERNAL_SIZE.x),
+		float(available_size.y) / float(Constants.INTERNAL_SIZE.y)
+	))
+
+	scale_factor = maxi(scale_factor, 1)
+
+	var displayed_size := Constants.INTERNAL_SIZE * scale_factor
+	var displayed_position := Vector2(available_size - displayed_size) * 0.5
+
+	subviewport_container.position = displayed_position
+	subviewport_container.size = Vector2(displayed_size)
+	subviewport_container.stretch = true
+	subviewport_container.stretch_shrink = scale_factor
+
+	retro_fx.position = displayed_position
+	retro_fx.size = Vector2(displayed_size)

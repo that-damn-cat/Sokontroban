@@ -48,23 +48,20 @@ shader_parameter/clip_warp = false
 shader_parameter/vignette_intensity = 0.695
 shader_parameter/vignette_opacity = 0.3650000173375
 
-[node name="Main" type="Node" unique_id=678261277]
+[node name="Main" type="Node" unique_id=678261277 node_paths=PackedStringArray("subviewport_container", "retro_fx")]
 process_mode = 3
 script = ExtResource("1_dg77c")
+subviewport_container = NodePath("SubViewportContainer")
+retro_fx = NodePath("RetroFX")
 
 [node name="SubViewportContainer" type="SubViewportContainer" parent="." unique_id=408789612]
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
 stretch = true
 stretch_shrink = 4
 
 [node name="GameViewport" type="SubViewport" parent="SubViewportContainer" unique_id=2023076955]
 handle_input_locally = false
 canvas_item_default_texture_filter = 0
-size = Vector2i(384, 216)
+size = Vector2i(2, 2)
 render_target_update_mode = 4
 
 [node name="Game" parent="SubViewportContainer/GameViewport" unique_id=833419358 groups=["pause_hidden"] instance=ExtResource("1_ig7tw")]

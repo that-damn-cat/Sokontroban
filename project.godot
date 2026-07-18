@@ -25,12 +25,11 @@ PauseManager="*uid://dmliia5oj54ra"
 
 [display]
 
-window/size/viewport_width=1536
-window/size/viewport_height=864
+window/size/viewport_width=384
+window/size/viewport_height=216
 window/size/maximize_disabled=true
 window/size/window_width_override=1536
 window/size/window_height_override=864
-window/stretch/mode="viewport"
 window/stretch/scale_mode="integer"
 
 [editor]
@@ -102,4 +101,5 @@ textures/canvas_textures/default_texture_filter=0
 rendering_device/driver.windows="d3d12"
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
+textures/vram_compression/import_etc2_astc=true
 textures/lossless_compression/force_png=true
