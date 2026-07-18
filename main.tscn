@@ -1,48 +1,16 @@
 [gd_scene format=3 uid="uid://but4fypef2swa"]
 
-[ext_resource type="Script" uid="uid://blsrw6p3c3uh4" path="res://main.gd" id="1_efxa6"]
 [ext_resource type="PackedScene" uid="uid://d2un13goeh2id" path="res://scenes/game.tscn" id="1_ig7tw"]
-[ext_resource type="Script" uid="uid://dg5q88q00q7e4" path="res://ui/turn_number_label.gd" id="2_7mycd"]
+[ext_resource type="Script" uid="uid://dg5q88q00q7e4" path="res://ui/scripts/turn_number_label.gd" id="2_7mycd"]
 [ext_resource type="FontFile" uid="uid://drthcd0jndmhp" path="res://assets/fonts/Everyday_Slight_Original.ttf" id="2_272bh"]
 [ext_resource type="Shader" uid="uid://dl6lgu0naa4er" path="res://shaders/retro.gdshader" id="2_h2yge"]
 [ext_resource type="AudioStream" uid="uid://bglvqs2gakkm2" path="res://assets/bgm/60hz.mp3" id="4_1bvp3"]
-[ext_resource type="Script" uid="uid://b7geaivhc6qh0" path="res://ui/loading_label.gd" id="4_5vw27"]
+[ext_resource type="Script" uid="uid://b7geaivhc6qh0" path="res://ui/scripts/loading_label.gd" id="4_5vw27"]
 [ext_resource type="FontFile" uid="uid://cr3vfu8wn8l5p" path="res://assets/fonts/Everyday_Typical_Bold.ttf" id="4_kek77"]
 [ext_resource type="AudioStream" uid="uid://bhekntrvdwibp" path="res://assets/bgm/static.mp3" id="5_lquwl"]
-[ext_resource type="Script" uid="uid://dws4wtexwqcex" path="res://ui/reset_label.gd" id="6_4c57u"]
-[ext_resource type="Texture2D" uid="uid://c5xvwp6ribk70" path="res://assets/gfx/menu_9_tile.png" id="8_dg77c"]
-[ext_resource type="Texture2D" uid="uid://c47p31t6810cw" path="res://assets/gfx/slider_grab.png" id="9_vivmo"]
-[ext_resource type="Script" uid="uid://ohj8d46kr0nx" path="res://ui/volume_slider.gd" id="9_ycdy4"]
-[ext_resource type="Texture2D" uid="uid://bdo8pipwpcyy" path="res://assets/gfx/slider_line.png" id="10_2cqfq"]
-[ext_resource type="Texture2D" uid="uid://dcmnnar76yp6" path="res://assets/gfx/slider_grab_hilight.png" id="10_yaehf"]
+[ext_resource type="Script" uid="uid://dws4wtexwqcex" path="res://ui/scripts/reset_label.gd" id="6_4c57u"]
+[ext_resource type="PackedScene" uid="uid://byqllygbpjoex" path="res://ui/pause_menu.tscn" id="7_efxa6"]
 [ext_resource type="AudioStream" uid="uid://bag1w4lfktakf" path="res://assets/bgm/Curiosity (Black).mp3" id="14_2cqfq"]
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_efxa6"]
-content_margin_left = 3.0
-content_margin_top = 3.0
-content_margin_right = 3.0
-content_margin_bottom = 3.0
-texture = ExtResource("8_dg77c")
-texture_margin_left = 12.0
-texture_margin_top = 12.0
-texture_margin_right = 12.0
-texture_margin_bottom = 12.0
-expand_margin_left = 6.0
-expand_margin_top = 6.0
-expand_margin_right = 6.0
-expand_margin_bottom = 6.0
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_vivmo"]
-content_margin_top = 6.0
-content_margin_bottom = 6.0
-texture = ExtResource("10_2cqfq")
-texture_margin_left = 6.0
-texture_margin_right = 6.0
-axis_stretch_horizontal = 1
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_2cqfq"]
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_yaehf"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_lqcak"]
 shader = ExtResource("2_h2yge")
@@ -68,13 +36,8 @@ shader_parameter/clip_warp = false
 shader_parameter/vignette_intensity = 0.695
 shader_parameter/vignette_opacity = 0.3650000173375
 
-[node name="Main" type="Node" unique_id=678261277 node_paths=PackedStringArray("pause_hidden_nodes", "pause_shown_nodes", "game_node", "first_pause_focus")]
+[node name="Main" type="Node" unique_id=678261277]
 process_mode = 3
-script = ExtResource("1_efxa6")
-pause_hidden_nodes = [NodePath("SubViewportContainer/GameViewport/CanvasLayer/TurnCountContainer"), NodePath("SubViewportContainer/GameViewport/CanvasLayer/LoadingContainer"), NodePath("SubViewportContainer/GameViewport/CanvasLayer/ResetContainer")]
-pause_shown_nodes = [NodePath("SubViewportContainer/GameViewport/CanvasLayer/MenuContainer")]
-game_node = NodePath("SubViewportContainer/GameViewport/Game")
-first_pause_focus = NodePath("SubViewportContainer/GameViewport/CanvasLayer/MenuContainer/MenuPanel/MenuCenter/VolumeSliders/MasterVolumeContainer/VolSlider")
 
 [node name="SubViewportContainer" type="SubViewportContainer" parent="." unique_id=408789612]
 anchors_preset = 15
@@ -91,13 +54,13 @@ canvas_item_default_texture_filter = 0
 size = Vector2i(384, 216)
 render_target_update_mode = 4
 
-[node name="Game" parent="SubViewportContainer/GameViewport" unique_id=833419358 instance=ExtResource("1_ig7tw")]
+[node name="Game" parent="SubViewportContainer/GameViewport" unique_id=833419358 groups=["pause_hidden"] instance=ExtResource("1_ig7tw")]
 process_mode = 1
 
 [node name="CanvasLayer" type="CanvasLayer" parent="SubViewportContainer/GameViewport" unique_id=489632269]
 process_mode = 1
 
-[node name="TurnCountContainer" type="MarginContainer" parent="SubViewportContainer/GameViewport/CanvasLayer" unique_id=83411827]
+[node name="TurnCountContainer" type="MarginContainer" parent="SubViewportContainer/GameViewport/CanvasLayer" unique_id=83411827 groups=["pause_hidden"]]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -134,7 +97,7 @@ theme_override_font_sizes/font_size = 14
 text = "Loading..."
 script = ExtResource("4_5vw27")
 
-[node name="ResetContainer" type="CenterContainer" parent="SubViewportContainer/GameViewport/CanvasLayer" unique_id=2103557865]
+[node name="ResetContainer" type="CenterContainer" parent="SubViewportContainer/GameViewport/CanvasLayer" unique_id=2103557865 groups=["pause_hidden"]]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -153,164 +116,7 @@ theme_override_font_sizes/font_size = 14
 text = "Resetting"
 script = ExtResource("6_4c57u")
 
-[node name="MenuContainer" type="MarginContainer" parent="SubViewportContainer/GameViewport/CanvasLayer" unique_id=367243175]
-process_mode = 2
-visible = false
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-theme_override_constants/margin_left = 60
-theme_override_constants/margin_top = 36
-theme_override_constants/margin_right = 60
-theme_override_constants/margin_bottom = 36
-
-[node name="MenuPanel" type="PanelContainer" parent="SubViewportContainer/GameViewport/CanvasLayer/MenuContainer" unique_id=116680471]
-layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxTexture_efxa6")
-
-[node name="Label" type="Label" parent="SubViewportContainer/GameViewport/CanvasLayer/MenuContainer/MenuPanel" unique_id=25255713]
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 0
-theme_override_fonts/font = ExtResource("4_kek77")
-theme_override_font_sizes/font_size = 14
-text = "Paused"
-
-[node name="MenuCenter" type="CenterContainer" parent="SubViewportContainer/GameViewport/CanvasLayer/MenuContainer/MenuPanel" unique_id=173687211]
-layout_mode = 2
-
-[node name="VolumeSliders" type="VBoxContainer" parent="SubViewportContainer/GameViewport/CanvasLayer/MenuContainer/MenuPanel/MenuCenter" unique_id=1497311771]
-layout_mode = 2
-
-[node name="MasterVolumeContainer" type="HBoxContainer" parent="SubViewportContainer/GameViewport/CanvasLayer/MenuContainer/MenuPanel/MenuCenter/VolumeSliders" unique_id=524986397]
-custom_minimum_size = Vector2(235, 0)
-layout_mode = 2
-
-[node name="SliderLabel" type="Label" parent="SubViewportContainer/GameViewport/CanvasLayer/MenuContainer/MenuPanel/MenuCenter/VolumeSliders/MasterVolumeContainer" unique_id=1168236632]
-layout_mode = 2
-size_flags_horizontal = 3
-offset_transform_enabled = true
-offset_transform_position = Vector2(0, 4)
-theme_override_fonts/font = ExtResource("2_272bh")
-theme_override_font_sizes/font_size = 10
-text = "Master"
-horizontal_alignment = 2
-
-[node name="VolSlider" type="HSlider" parent="SubViewportContainer/GameViewport/CanvasLayer/MenuContainer/MenuPanel/MenuCenter/VolumeSliders/MasterVolumeContainer" unique_id=944146191]
-custom_minimum_size = Vector2(180, 12)
-layout_mode = 2
-size_flags_vertical = 4
-focus_neighbor_top = NodePath("../../BGFXVolumeSlider/VolSlider")
-focus_neighbor_bottom = NodePath("../../MusicVolumeContainer/VolSlider")
-theme_override_icons/grabber = ExtResource("9_vivmo")
-theme_override_icons/grabber_highlight = ExtResource("10_yaehf")
-theme_override_icons/grabber_disabled = ExtResource("9_vivmo")
-theme_override_styles/slider = SubResource("StyleBoxTexture_vivmo")
-theme_override_styles/grabber_area = SubResource("StyleBoxEmpty_2cqfq")
-theme_override_styles/grabber_area_highlight = SubResource("StyleBoxEmpty_yaehf")
-max_value = 1.0
-value = 1.0
-script = ExtResource("9_ycdy4")
-audio_bus = &"Master"
-
-[node name="MusicVolumeContainer" type="HBoxContainer" parent="SubViewportContainer/GameViewport/CanvasLayer/MenuContainer/MenuPanel/MenuCenter/VolumeSliders" unique_id=229345506]
-custom_minimum_size = Vector2(235, 0)
-layout_mode = 2
-
-[node name="SliderLabel" type="Label" parent="SubViewportContainer/GameViewport/CanvasLayer/MenuContainer/MenuPanel/MenuCenter/VolumeSliders/MusicVolumeContainer" unique_id=1234584621]
-layout_mode = 2
-size_flags_horizontal = 3
-offset_transform_enabled = true
-offset_transform_position = Vector2(0, 4)
-theme_override_fonts/font = ExtResource("2_272bh")
-theme_override_font_sizes/font_size = 10
-text = "Music"
-horizontal_alignment = 2
-
-[node name="VolSlider" type="HSlider" parent="SubViewportContainer/GameViewport/CanvasLayer/MenuContainer/MenuPanel/MenuCenter/VolumeSliders/MusicVolumeContainer" unique_id=546745045]
-custom_minimum_size = Vector2(180, 12)
-layout_mode = 2
-size_flags_vertical = 4
-focus_neighbor_top = NodePath("../../MasterVolumeContainer/VolSlider")
-focus_neighbor_bottom = NodePath("../../SFXVolumeContainer/VolSlider")
-theme_override_icons/grabber = ExtResource("9_vivmo")
-theme_override_icons/grabber_highlight = ExtResource("10_yaehf")
-theme_override_icons/grabber_disabled = ExtResource("9_vivmo")
-theme_override_styles/slider = SubResource("StyleBoxTexture_vivmo")
-theme_override_styles/grabber_area = SubResource("StyleBoxEmpty_2cqfq")
-theme_override_styles/grabber_area_highlight = SubResource("StyleBoxEmpty_yaehf")
-max_value = 1.0
-value = 1.0
-script = ExtResource("9_ycdy4")
-audio_bus = &"Music"
-
-[node name="SFXVolumeContainer" type="HBoxContainer" parent="SubViewportContainer/GameViewport/CanvasLayer/MenuContainer/MenuPanel/MenuCenter/VolumeSliders" unique_id=1274837362]
-custom_minimum_size = Vector2(235, 0)
-layout_mode = 2
-
-[node name="SliderLabel" type="Label" parent="SubViewportContainer/GameViewport/CanvasLayer/MenuContainer/MenuPanel/MenuCenter/VolumeSliders/SFXVolumeContainer" unique_id=1769202110]
-layout_mode = 2
-size_flags_horizontal = 3
-offset_transform_enabled = true
-offset_transform_position = Vector2(0, 4)
-theme_override_fonts/font = ExtResource("2_272bh")
-theme_override_font_sizes/font_size = 10
-text = "SFX"
-horizontal_alignment = 2
-
-[node name="VolSlider" type="HSlider" parent="SubViewportContainer/GameViewport/CanvasLayer/MenuContainer/MenuPanel/MenuCenter/VolumeSliders/SFXVolumeContainer" unique_id=1729482504]
-custom_minimum_size = Vector2(180, 12)
-layout_mode = 2
-size_flags_vertical = 4
-focus_neighbor_top = NodePath("../../MusicVolumeContainer/VolSlider")
-focus_neighbor_bottom = NodePath("../../BGFXVolumeSlider/VolSlider")
-theme_override_icons/grabber = ExtResource("9_vivmo")
-theme_override_icons/grabber_highlight = ExtResource("10_yaehf")
-theme_override_icons/grabber_disabled = ExtResource("9_vivmo")
-theme_override_styles/slider = SubResource("StyleBoxTexture_vivmo")
-theme_override_styles/grabber_area = SubResource("StyleBoxEmpty_2cqfq")
-theme_override_styles/grabber_area_highlight = SubResource("StyleBoxEmpty_yaehf")
-max_value = 1.0
-value = 1.0
-script = ExtResource("9_ycdy4")
-audio_bus = &"SFX"
-sample_play = &"pause"
-sample_debounce = 0.15
-
-[node name="BGFXVolumeSlider" type="HBoxContainer" parent="SubViewportContainer/GameViewport/CanvasLayer/MenuContainer/MenuPanel/MenuCenter/VolumeSliders" unique_id=1794556970]
-custom_minimum_size = Vector2(235, 0)
-layout_mode = 2
-
-[node name="SliderLabel" type="Label" parent="SubViewportContainer/GameViewport/CanvasLayer/MenuContainer/MenuPanel/MenuCenter/VolumeSliders/BGFXVolumeSlider" unique_id=109297252]
-layout_mode = 2
-size_flags_horizontal = 3
-offset_transform_enabled = true
-offset_transform_position = Vector2(0, 4)
-theme_override_fonts/font = ExtResource("2_272bh")
-theme_override_font_sizes/font_size = 10
-text = "BGFX"
-horizontal_alignment = 2
-
-[node name="VolSlider" type="HSlider" parent="SubViewportContainer/GameViewport/CanvasLayer/MenuContainer/MenuPanel/MenuCenter/VolumeSliders/BGFXVolumeSlider" unique_id=768305558]
-custom_minimum_size = Vector2(180, 12)
-layout_mode = 2
-size_flags_vertical = 4
-focus_neighbor_top = NodePath("../../SFXVolumeContainer/VolSlider")
-focus_neighbor_bottom = NodePath("../../MasterVolumeContainer/VolSlider")
-theme_override_icons/grabber = ExtResource("9_vivmo")
-theme_override_icons/grabber_highlight = ExtResource("10_yaehf")
-theme_override_icons/grabber_disabled = ExtResource("9_vivmo")
-theme_override_styles/slider = SubResource("StyleBoxTexture_vivmo")
-theme_override_styles/grabber_area = SubResource("StyleBoxEmpty_2cqfq")
-theme_override_styles/grabber_area_highlight = SubResource("StyleBoxEmpty_yaehf")
-max_value = 1.0
-value = 1.0
-script = ExtResource("9_ycdy4")
-audio_bus = &"BGFX"
+[node name="PauseMenuMargin" parent="SubViewportContainer/GameViewport/CanvasLayer" unique_id=789137003 instance=ExtResource("7_efxa6")]
 
 [node name="RetroFX" type="ColorRect" parent="." unique_id=83901378]
 process_mode = 3

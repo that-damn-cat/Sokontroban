@@ -48,13 +48,13 @@ var allowed_inputs: Array[StringName] = [
 ]
 
 func _ready() -> void:
+	_history.max_steps = max_history_steps
+
 	LevelManager.set_game(self)
 	LevelManager.levels_exhausted.connect(_on_levels_exhausted)
+
 	LevelManager.current_level = starting_level - 1
 	LevelManager.load_next_level(false)
-	await LevelManager.level_loaded
-
-	_history.max_steps = max_history_steps
 
 func _exit_tree() -> void:
 	if is_instance_valid(_history):
@@ -100,8 +100,11 @@ func remove_actor(actor: Actor) -> void:
 		actor.kill()
 
 func remove_all_actors() -> void:
-	for actor in actors:
+	for actor in actors.duplicate():
 		remove_actor(actor)
+
+	actors.clear()
+	player = null
 
 ## Operations can detach an actor without freeing it for undo/redo
 func detach_actor(actor: Actor) -> void:

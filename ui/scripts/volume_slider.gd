@@ -13,14 +13,18 @@ func _ready() -> void:
 	step = 0.025
 	max_value = 1.0
 
-	_sfx_index = AudioServer.get_bus_index(audio_bus)
-	value = db_to_linear(AudioServer.get_bus_volume_db(_sfx_index))
-
 	value_changed.connect(_on_value_changed)
+	SaveDataManager.config_reset.connect(_refresh_value)
+
+	_refresh_value()
 
 func _process(delta: float) -> void:
 	if _debounce_time >= 0.0:
 		_debounce_time -= delta
+
+func _refresh_value() -> void:
+	_sfx_index = AudioServer.get_bus_index(audio_bus)
+	value = db_to_linear(AudioServer.get_bus_volume_db(_sfx_index))
 
 func _on_value_changed(new_value: float):
 	AudioServer.set_bus_volume_db(_sfx_index, linear_to_db(new_value))

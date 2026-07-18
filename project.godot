@@ -21,6 +21,7 @@ Constants="*uid://c3qcgyxly0spa"
 SFXService="*uid://bibsi0e8bqr7o"
 LevelManager="*uid://jnexaxvinlu5"
 SaveDataManager="*uid://qpw8hhivp8g5"
+PauseManager="*uid://dmliia5oj54ra"
 
 [display]
 
@@ -41,6 +42,8 @@ movie_writer/movie_file="/home/riley/Videos/gameplay.avi"
 game=""
 level=""
 player=""
+pause_hidden=""
+pause_shown=""
 
 [input]
 

@@ -3,6 +3,7 @@ extends Node
 signal levels_exhausted
 signal level_cleared
 signal level_loaded
+signal level_quit
 signal turn_updated
 signal level_reset
 
@@ -13,7 +14,9 @@ var load_delay: float = 1.2
 var empty_level_scene: PackedScene = preload(Constants.EMPTY_LEVEL_FILE)
 var turn: int = 0
 
+var reset_enabled: bool = true
 var _reset_held_time: float = 0.0
+var _reset_triggered: bool = false
 
 func _ready() -> void:
 	var dir := DirAccess.open("res://scenes/levels")
@@ -63,13 +66,18 @@ func _ready() -> void:
 		level_list[level_number] = level_data["scene"]
 
 func _process(delta: float) -> void:
-	if Input.is_action_pressed(&"reset"):
-		_reset_held_time += delta
-	else:
+	if not reset_enabled or not Input.is_action_pressed(&"reset"):
 		_reset_held_time = 0.0
+		_reset_triggered = false
 		return
 
+	if _reset_triggered:
+		return
+
+	_reset_held_time += delta
+
 	if _reset_held_time >= Constants.RESET_HOLD_TIME:
+		_reset_triggered = true
 		clear_level()
 		_load_level(current_level)
 		level_reset.emit()
@@ -110,11 +118,26 @@ func load_next_level(with_delay: bool = true) -> void:
 			var level = empty_level_scene.instantiate()
 			_game.add_child(level)
 			_game.move_child(level, 0)
+			_game.level = level
 			levels_exhausted.emit()
 			return
 
 		if _load_level(current_level):
 			return
+
+func quit_level() -> void:
+	current_level = -1
+
+	SFXService.play("floppy")
+	clear_level()
+	await get_tree().create_timer(load_delay).timeout
+
+	var level = empty_level_scene.instantiate()
+	_game.add_child(level)
+	_game.move_child(level, 0)
+	_game.level = level
+
+	level_quit.emit()
 
 func clear_level() -> void:
 	_game.remove_all_actors()

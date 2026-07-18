@@ -1,5 +1,9 @@
 extends Node
 
+signal progress_changed
+signal scores_changed(level_number: int)
+signal config_reset
+
 var save_data := ConfigFile.new()
 var unlocked_levels: Array[int] = [1]
 var has_won: bool = false
@@ -39,14 +43,15 @@ func unlock_level(level_number: int) -> void:
 	save()
 
 func update_score(level_number: int, score: int) -> void:
-	if not hi_scores.has(level_number):
-		hi_scores[level_number] = score
-		save()
+	var previous_score: int = hi_scores.get(level_number, -1)
+
+	if previous_score >= 0 and score >= previous_score:
 		return
 
-	if hi_scores[level_number] > score:
-		hi_scores[level_number] = score
-		save()
+	hi_scores[level_number] = score
+	save_data.set_value("Scores", "hi_scores", hi_scores)
+	save()
+	scores_changed.emit(level_number)
 
 func update_config() -> void:
 	save_data.set_value("Audio", "Master", _get_audio_value("Master"))
@@ -57,15 +62,19 @@ func update_config() -> void:
 	save()
 
 func set_victory() -> void:
-	save_data.set_value("Progress", "victory", true)
+	has_won = true
+	save_data.set_value("Progress", "victory", has_won)
 	save()
+	progress_changed.emit()
 
 func save() -> void:
 	save_data.save(Constants.SAVE_DATA_FILE)
 
 func unset_victory() -> void:
-	save_data.set_value("Progress", "victory", false)
+	has_won = false
+	save_data.set_value("Progress", "victory", has_won)
 	save()
+	progress_changed.emit()
 
 func init_all_data() -> void:
 	save_data.clear()
@@ -81,14 +90,19 @@ func reset_config() -> void:
 	save()
 
 	_set_audio_buses()
+	config_reset.emit()
 
 func reset_progress() -> void:
-	save_data.set_value("Progress", "unlocked_levels", [1] as Array[int])
-	save_data.set_value("Progress", "victory", false)
+	unlocked_levels = [1]
+	has_won = false
+	hi_scores.clear()
 
-	save_data.set_value("Scores", "hi_scores", {} as Dictionary[int, int])
+	save_data.set_value("Progress", "unlocked_levels", unlocked_levels)
+	save_data.set_value("Progress", "victory", has_won)
+	save_data.set_value("Scores", "hi_scores", hi_scores)
 
 	save()
+	progress_changed.emit()
 
 func _set_audio_buses() -> void:
 	_update_audio_server("Master")

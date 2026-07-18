@@ -1,0 +1,291 @@
+[gd_scene format=3 uid="uid://byqllygbpjoex"]
+
+[ext_resource type="Texture2D" uid="uid://c5xvwp6ribk70" path="res://assets/gfx/menu_9_tile.png" id="1_lpidc"]
+[ext_resource type="FontFile" uid="uid://drthcd0jndmhp" path="res://assets/fonts/Everyday_Slight_Original.ttf" id="2_b1mq0"]
+[ext_resource type="Texture2D" uid="uid://c47p31t6810cw" path="res://assets/gfx/slider_grab.png" id="3_reb5t"]
+[ext_resource type="Texture2D" uid="uid://dcmnnar76yp6" path="res://assets/gfx/slider_grab_hilight.png" id="4_jcxce"]
+[ext_resource type="Texture2D" uid="uid://bdo8pipwpcyy" path="res://assets/gfx/slider_line.png" id="5_72dg2"]
+[ext_resource type="Script" uid="uid://rw0vq0c2xyrj" path="res://ui/scripts/master_vol_slider.gd" id="6_0vwb3"]
+[ext_resource type="Script" uid="uid://ohj8d46kr0nx" path="res://ui/scripts/volume_slider.gd" id="7_xnge7"]
+[ext_resource type="Texture2D" uid="uid://cn5jvipeic1db" path="res://assets/gfx/button_9_tile.png" id="8_ii2nf"]
+[ext_resource type="Texture2D" uid="uid://cfmx3f72rohly" path="res://assets/gfx/button_9_tile_hilight.png" id="9_155x5"]
+[ext_resource type="Script" uid="uid://caa11euikrmh" path="res://ui/scripts/main_menu_button.gd" id="10_2thiu"]
+[ext_resource type="Script" uid="uid://csu01hxwehb4q" path="res://ui/scripts/reset_config_button.gd" id="11_5abbn"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_efxa6"]
+content_margin_left = 3.0
+content_margin_top = 3.0
+content_margin_right = 3.0
+content_margin_bottom = 3.0
+texture = ExtResource("1_lpidc")
+texture_margin_left = 12.0
+texture_margin_top = 12.0
+texture_margin_right = 12.0
+texture_margin_bottom = 12.0
+expand_margin_left = 6.0
+expand_margin_top = 6.0
+expand_margin_right = 6.0
+expand_margin_bottom = 6.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_vivmo"]
+content_margin_top = 6.0
+content_margin_bottom = 6.0
+texture = ExtResource("5_72dg2")
+texture_margin_left = 6.0
+texture_margin_right = 6.0
+axis_stretch_horizontal = 1
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_2cqfq"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_yaehf"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_yaehf"]
+texture = ExtResource("8_ii2nf")
+texture_margin_left = 12.0
+texture_margin_top = 12.0
+texture_margin_right = 12.0
+texture_margin_bottom = 12.0
+axis_stretch_horizontal = 2
+axis_stretch_vertical = 2
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_074og"]
+texture = ExtResource("9_155x5")
+texture_margin_left = 12.0
+texture_margin_top = 12.0
+texture_margin_right = 12.0
+texture_margin_bottom = 12.0
+axis_stretch_horizontal = 2
+axis_stretch_vertical = 2
+
+[node name="PauseMenuMargin" type="MarginContainer" unique_id=789137003 groups=["pause_shown"]]
+process_mode = 2
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 60
+theme_override_constants/margin_top = 36
+theme_override_constants/margin_right = 60
+theme_override_constants/margin_bottom = 36
+
+[node name="PauseMenuPanel" type="PanelContainer" parent="." unique_id=307505102]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_efxa6")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PauseMenuPanel" unique_id=1765251634]
+layout_mode = 2
+
+[node name="PauseLabel" type="Label" parent="PauseMenuPanel/VBoxContainer" unique_id=2060665717]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+offset_transform_enabled = true
+offset_transform_position = Vector2(0, 4)
+theme_override_fonts/font = ExtResource("2_b1mq0")
+theme_override_font_sizes/font_size = 10
+text = "Paused"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="MenuCenter" type="CenterContainer" parent="PauseMenuPanel/VBoxContainer" unique_id=684126632]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="VolumeSliders" type="VBoxContainer" parent="PauseMenuPanel/VBoxContainer/MenuCenter" unique_id=1769556541]
+layout_mode = 2
+
+[node name="MasterVolumeContainer" type="HBoxContainer" parent="PauseMenuPanel/VBoxContainer/MenuCenter/VolumeSliders" unique_id=1438515443]
+custom_minimum_size = Vector2(235, 0)
+layout_mode = 2
+
+[node name="SliderLabel" type="Label" parent="PauseMenuPanel/VBoxContainer/MenuCenter/VolumeSliders/MasterVolumeContainer" unique_id=1624985698]
+layout_mode = 2
+size_flags_horizontal = 3
+offset_transform_enabled = true
+offset_transform_position = Vector2(0, 4)
+theme_override_fonts/font = ExtResource("2_b1mq0")
+theme_override_font_sizes/font_size = 10
+text = "Master"
+horizontal_alignment = 2
+
+[node name="VolSlider" type="HSlider" parent="PauseMenuPanel/VBoxContainer/MenuCenter/VolumeSliders/MasterVolumeContainer" unique_id=991467591]
+custom_minimum_size = Vector2(180, 12)
+layout_mode = 2
+size_flags_vertical = 4
+focus_neighbor_top = NodePath("../../BGFXVolumeSlider/VolSlider")
+focus_neighbor_bottom = NodePath("../../MusicVolumeContainer/VolSlider")
+theme_override_icons/grabber = ExtResource("3_reb5t")
+theme_override_icons/grabber_highlight = ExtResource("4_jcxce")
+theme_override_icons/grabber_disabled = ExtResource("3_reb5t")
+theme_override_styles/slider = SubResource("StyleBoxTexture_vivmo")
+theme_override_styles/grabber_area = SubResource("StyleBoxEmpty_2cqfq")
+theme_override_styles/grabber_area_highlight = SubResource("StyleBoxEmpty_yaehf")
+max_value = 1.0
+value = 1.0
+script = ExtResource("6_0vwb3")
+audio_bus = &"Master"
+metadata/_custom_type_script = "uid://ohj8d46kr0nx"
+
+[node name="MusicVolumeContainer" type="HBoxContainer" parent="PauseMenuPanel/VBoxContainer/MenuCenter/VolumeSliders" unique_id=1012028671]
+custom_minimum_size = Vector2(235, 0)
+layout_mode = 2
+
+[node name="SliderLabel" type="Label" parent="PauseMenuPanel/VBoxContainer/MenuCenter/VolumeSliders/MusicVolumeContainer" unique_id=1613771833]
+layout_mode = 2
+size_flags_horizontal = 3
+offset_transform_enabled = true
+offset_transform_position = Vector2(0, 4)
+theme_override_fonts/font = ExtResource("2_b1mq0")
+theme_override_font_sizes/font_size = 10
+text = "Music"
+horizontal_alignment = 2
+
+[node name="VolSlider" type="HSlider" parent="PauseMenuPanel/VBoxContainer/MenuCenter/VolumeSliders/MusicVolumeContainer" unique_id=1518978339]
+custom_minimum_size = Vector2(180, 12)
+layout_mode = 2
+size_flags_vertical = 4
+focus_neighbor_top = NodePath("../../MasterVolumeContainer/VolSlider")
+focus_neighbor_bottom = NodePath("../../SFXVolumeContainer/VolSlider")
+theme_override_icons/grabber = ExtResource("3_reb5t")
+theme_override_icons/grabber_highlight = ExtResource("4_jcxce")
+theme_override_icons/grabber_disabled = ExtResource("3_reb5t")
+theme_override_styles/slider = SubResource("StyleBoxTexture_vivmo")
+theme_override_styles/grabber_area = SubResource("StyleBoxEmpty_2cqfq")
+theme_override_styles/grabber_area_highlight = SubResource("StyleBoxEmpty_yaehf")
+max_value = 1.0
+value = 1.0
+script = ExtResource("7_xnge7")
+audio_bus = &"Music"
+metadata/_custom_type_script = "uid://ohj8d46kr0nx"
+
+[node name="SFXVolumeContainer" type="HBoxContainer" parent="PauseMenuPanel/VBoxContainer/MenuCenter/VolumeSliders" unique_id=1572714127]
+custom_minimum_size = Vector2(235, 0)
+layout_mode = 2
+
+[node name="SliderLabel" type="Label" parent="PauseMenuPanel/VBoxContainer/MenuCenter/VolumeSliders/SFXVolumeContainer" unique_id=350847766]
+layout_mode = 2
+size_flags_horizontal = 3
+offset_transform_enabled = true
+offset_transform_position = Vector2(0, 4)
+theme_override_fonts/font = ExtResource("2_b1mq0")
+theme_override_font_sizes/font_size = 10
+text = "SFX"
+horizontal_alignment = 2
+
+[node name="VolSlider" type="HSlider" parent="PauseMenuPanel/VBoxContainer/MenuCenter/VolumeSliders/SFXVolumeContainer" unique_id=1725605719]
+custom_minimum_size = Vector2(180, 12)
+layout_mode = 2
+size_flags_vertical = 4
+focus_neighbor_top = NodePath("../../MusicVolumeContainer/VolSlider")
+focus_neighbor_bottom = NodePath("../../BGFXVolumeSlider/VolSlider")
+theme_override_icons/grabber = ExtResource("3_reb5t")
+theme_override_icons/grabber_highlight = ExtResource("4_jcxce")
+theme_override_icons/grabber_disabled = ExtResource("3_reb5t")
+theme_override_styles/slider = SubResource("StyleBoxTexture_vivmo")
+theme_override_styles/grabber_area = SubResource("StyleBoxEmpty_2cqfq")
+theme_override_styles/grabber_area_highlight = SubResource("StyleBoxEmpty_yaehf")
+max_value = 1.0
+value = 1.0
+script = ExtResource("7_xnge7")
+audio_bus = &"SFX"
+sample_play = &"pause"
+sample_debounce = 0.15
+metadata/_custom_type_script = "uid://ohj8d46kr0nx"
+
+[node name="BGFXVolumeSlider" type="HBoxContainer" parent="PauseMenuPanel/VBoxContainer/MenuCenter/VolumeSliders" unique_id=1075873440]
+custom_minimum_size = Vector2(235, 0)
+layout_mode = 2
+
+[node name="SliderLabel" type="Label" parent="PauseMenuPanel/VBoxContainer/MenuCenter/VolumeSliders/BGFXVolumeSlider" unique_id=1457257761]
+layout_mode = 2
+size_flags_horizontal = 3
+offset_transform_enabled = true
+offset_transform_position = Vector2(0, 4)
+theme_override_fonts/font = ExtResource("2_b1mq0")
+theme_override_font_sizes/font_size = 10
+text = "BGFX"
+horizontal_alignment = 2
+
+[node name="VolSlider" type="HSlider" parent="PauseMenuPanel/VBoxContainer/MenuCenter/VolumeSliders/BGFXVolumeSlider" unique_id=207880773]
+custom_minimum_size = Vector2(180, 12)
+layout_mode = 2
+size_flags_vertical = 4
+focus_neighbor_top = NodePath("../../SFXVolumeContainer/VolSlider")
+focus_neighbor_bottom = NodePath("../../MasterVolumeContainer/VolSlider")
+theme_override_icons/grabber = ExtResource("3_reb5t")
+theme_override_icons/grabber_highlight = ExtResource("4_jcxce")
+theme_override_icons/grabber_disabled = ExtResource("3_reb5t")
+theme_override_styles/slider = SubResource("StyleBoxTexture_vivmo")
+theme_override_styles/grabber_area = SubResource("StyleBoxEmpty_2cqfq")
+theme_override_styles/grabber_area_highlight = SubResource("StyleBoxEmpty_yaehf")
+max_value = 1.0
+value = 1.0
+script = ExtResource("7_xnge7")
+audio_bus = &"BGFX"
+metadata/_custom_type_script = "uid://ohj8d46kr0nx"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PauseMenuPanel/VBoxContainer" unique_id=548642958]
+layout_mode = 2
+theme_override_constants/separation = 24
+alignment = 1
+
+[node name="MainMenuButton" type="Button" parent="PauseMenuPanel/VBoxContainer/HBoxContainer" unique_id=1806040574 node_paths=PackedStringArray("button_label")]
+custom_minimum_size = Vector2(96, 18)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 8
+theme_override_styles/normal = SubResource("StyleBoxTexture_yaehf")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_yaehf")
+theme_override_styles/hover = SubResource("StyleBoxTexture_074og")
+theme_override_styles/disabled = SubResource("StyleBoxTexture_yaehf")
+theme_override_styles/focus = SubResource("StyleBoxTexture_074og")
+script = ExtResource("10_2thiu")
+button_label = NodePath("MainMenuButton")
+metadata/_custom_type_script = "uid://ceawyxiw8mrlc"
+
+[node name="MainMenuButton" type="Label" parent="PauseMenuPanel/VBoxContainer/HBoxContainer/MainMenuButton" unique_id=1382839145]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+offset_transform_enabled = true
+offset_transform_position = Vector2(2, 5)
+theme_override_fonts/font = ExtResource("2_b1mq0")
+theme_override_font_sizes/font_size = 10
+text = "Main Menu"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ResetAudioButton" type="Button" parent="PauseMenuPanel/VBoxContainer/HBoxContainer" unique_id=1544450252 node_paths=PackedStringArray("button_label")]
+custom_minimum_size = Vector2(96, 18)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 8
+theme_override_styles/normal = SubResource("StyleBoxTexture_yaehf")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_yaehf")
+theme_override_styles/hover = SubResource("StyleBoxTexture_074og")
+theme_override_styles/disabled = SubResource("StyleBoxTexture_yaehf")
+theme_override_styles/focus = SubResource("StyleBoxTexture_074og")
+script = ExtResource("11_5abbn")
+button_label = NodePath("ResetAudioLabel")
+metadata/_custom_type_script = "uid://ceawyxiw8mrlc"
+
+[node name="ResetAudioLabel" type="Label" parent="PauseMenuPanel/VBoxContainer/HBoxContainer/ResetAudioButton" unique_id=1054917131]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+offset_transform_enabled = true
+offset_transform_position = Vector2(2, 5)
+theme_override_fonts/font = ExtResource("2_b1mq0")
+theme_override_font_sizes/font_size = 10
+text = "Reset Audio"
+horizontal_alignment = 1
+vertical_alignment = 1
