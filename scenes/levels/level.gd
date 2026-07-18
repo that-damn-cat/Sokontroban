@@ -11,7 +11,13 @@ var player_direction: Array[StringName] = []
 var undo_pressed := false
 var reset_pressed := false
 
+@export var camera_node: Camera2D
 @export var level_number: int = 0
+
+@warning_ignore("unused_private_class_variable")
+var _has_camera: bool:
+	get:
+		return is_instance_valid(camera_node)
 
 func _ready() -> void:
 	_game = get_tree().get_first_node_in_group("game") as Game
@@ -45,15 +51,13 @@ func _input(event: InputEvent) -> void:
 func _use_tile_data_runtime_update(coords: Vector2i) -> bool:
 	return input_tiles.has(coords)
 
-func _tile_data_runtime_update(coords: Vector2i, tile_data: TileData) -> void:
-	for actor in _game.get_actors_at_tile(coords):
-		if actor is Crate:
-			tile_data.modulate = Constants.RED_COLOR
-			return
-
+func _tile_data_runtime_update(_coords: Vector2i, tile_data: TileData) -> void:
 	var default_color: Color = tile_data.get_custom_data("default_modulate")
 	var input_name: StringName = tile_data.get_custom_data("input_name")
 
+	if is_input_blocked(input_name):
+		tile_data.modulate = Constants.RED_COLOR
+		return
 
 	var is_highlighted: bool = (
 		input_name in player_direction

@@ -148,6 +148,7 @@ func _load_level(level_number: int) -> bool:
 	_game.add_child(level)
 	_game.move_child(level, 0)
 	_game.level = level
+	SaveDataManager.unlock_level(level.level_number)
 	level.level_complete.connect(_game._on_level_complete)
 	level_loaded.emit()
 	return true

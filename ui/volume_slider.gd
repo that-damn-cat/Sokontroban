@@ -26,7 +26,6 @@ func _on_value_changed(new_value: float):
 	AudioServer.set_bus_volume_db(_sfx_index, linear_to_db(new_value))
 
 	if SFXService.has_sfx(sample_play):
-		print(_debounce_time)
 		if _debounce_time <= 0:
 			SFXService.play(sample_play)
 			_debounce_time = sample_debounce

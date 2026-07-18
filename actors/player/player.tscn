@@ -53,3 +53,4 @@ gizmo_extents = 12.0
 [node name="Camera2D" type="Camera2D" parent="CameraTarget" unique_id=1678174296]
 drag_horizontal_enabled = true
 drag_vertical_enabled = true
+editor_draw_screen = false

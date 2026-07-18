@@ -4,6 +4,11 @@ extends Actor
 @export_category("Visuals")
 @export_range(0.0, 1.0, 0.05) var bump_ratio: float = 0.25
 
+func _ready() -> void:
+	super()
+	_update_animation()
+	_game.level.notify_runtime_tile_data_update()
+
 func play_move_animation(target_tile: Vector2i, is_undo: bool = false) -> Tween:
 	var tween := _new_motion_tween()
 	var target_position := _game.get_global_position(target_tile)

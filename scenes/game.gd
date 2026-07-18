@@ -19,6 +19,7 @@ enum PlaybackKind {
 @export var level: Level
 @export var turn_cooldown_seconds: float = 0.05
 @export var max_history_steps: int = 250
+@export_range(0, 50) var starting_level: int = 0
 
 var turn_in_process: bool = false
 var player: Player
@@ -49,6 +50,7 @@ var allowed_inputs: Array[StringName] = [
 func _ready() -> void:
 	LevelManager.set_game(self)
 	LevelManager.levels_exhausted.connect(_on_levels_exhausted)
+	LevelManager.current_level = starting_level - 1
 	LevelManager.load_next_level(false)
 	await LevelManager.level_loaded
 
@@ -343,7 +345,9 @@ func _direction_name(direction: Vector2i) -> String:
 func _on_level_complete() -> void:
 	SFXService.stop("goal")
 	SFXService.play("level_win")
+	SaveDataManager.update_score(level.level_number, LevelManager.turn)
 	_level_complete = true
 
 func _on_levels_exhausted() -> void:
+	SaveDataManager.set_victory()
 	get_tree().quit()

@@ -23,6 +23,11 @@ var _input_direction := Vector2i.ZERO
 
 
 func _enter_tree() -> void:
+	_game = get_tree().get_first_node_in_group("game") as Game
+	if _game.level._has_camera:
+		camera.free()
+		return
+
 	# Setup camera before it enters the tree to avoid visual glitch
 	if camera == null or camera_target == null:
 		push_error("Player Camera Missing!")
@@ -76,16 +81,24 @@ func _poll_direction() -> Vector2i:
 
 	var direction := _input_direction
 
-	if &"left" in _game.allowed_inputs and Input.is_action_pressed(&"left"):
+	if &"left" in _game.allowed_inputs and (
+		Input.is_action_pressed(&"left")
+	):
 		direction.x -= 1
 
-	if &"right" in _game.allowed_inputs and Input.is_action_pressed(&"right"):
+	if &"right" in _game.allowed_inputs and (
+		Input.is_action_pressed(&"right")
+	):
 		direction.x += 1
 
-	if &"up" in _game.allowed_inputs and Input.is_action_pressed(&"up"):
+	if &"up" in _game.allowed_inputs and (
+		Input.is_action_pressed(&"up")
+	):
 		direction.y -= 1
 
-	if &"down" in _game.allowed_inputs and Input.is_action_pressed(&"down"):
+	if &"down" in _game.allowed_inputs and (
+		Input.is_action_pressed(&"down")
+	):
 		direction.y += 1
 
 	direction.x = sign(direction.x)

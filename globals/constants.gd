@@ -27,4 +27,7 @@ const RESET_HOLD_TIME: float = 1.25
 func _enter_tree() -> void:
 	RenderingServer.set_default_clear_color(BG_COLOR)
 
-const EMPTY_LEVEL_FILE: String = &"res://scenes/levels/empty_level.tscn"
+
+# Files
+const EMPTY_LEVEL_FILE: String = &"res://scenes/levels/_empty_level.tscn"
+const SAVE_DATA_FILE: String = &"user://save_data.cfg"

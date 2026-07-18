@@ -26,6 +26,8 @@ func _input(event: InputEvent) -> void:
 		first_pause_focus.grab_focus()
 
 	else:
+		SaveDataManager.update_config()
+
 		game_node.level.show()
 
 		for node in pause_hidden_nodes:
