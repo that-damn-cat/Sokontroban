@@ -1,7 +1,7 @@
 extends Node
 
 signal progress_changed
-signal scores_changed(level_number: int)
+signal score_changed(level_number: int)
 signal config_reset
 
 var save_data := ConfigFile.new()
@@ -51,7 +51,7 @@ func update_score(level_number: int, score: int) -> void:
 	hi_scores[level_number] = score
 	save_data.set_value("Scores", "hi_scores", hi_scores)
 	save()
-	scores_changed.emit(level_number)
+	score_changed.emit(level_number)
 
 func update_config() -> void:
 	save_data.set_value("Audio", "Master", _get_audio_value("Master"))

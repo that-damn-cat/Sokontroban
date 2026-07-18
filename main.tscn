@@ -1,5 +1,6 @@
 [gd_scene format=3 uid="uid://but4fypef2swa"]
 
+[ext_resource type="Script" uid="uid://blsrw6p3c3uh4" path="res://main.gd" id="1_dg77c"]
 [ext_resource type="PackedScene" uid="uid://d2un13goeh2id" path="res://scenes/game.tscn" id="1_ig7tw"]
 [ext_resource type="Script" uid="uid://dg5q88q00q7e4" path="res://ui/scripts/turn_number_label.gd" id="2_7mycd"]
 [ext_resource type="FontFile" uid="uid://drthcd0jndmhp" path="res://assets/fonts/Everyday_Slight_Original.ttf" id="2_272bh"]
@@ -10,7 +11,15 @@
 [ext_resource type="AudioStream" uid="uid://bhekntrvdwibp" path="res://assets/bgm/static.mp3" id="5_lquwl"]
 [ext_resource type="Script" uid="uid://dws4wtexwqcex" path="res://ui/scripts/reset_label.gd" id="6_4c57u"]
 [ext_resource type="PackedScene" uid="uid://byqllygbpjoex" path="res://ui/pause_menu.tscn" id="7_efxa6"]
+[ext_resource type="StyleBox" uid="uid://cq833l8pvty1x" path="res://resources/menu_panel_style.tres" id="8_ycdy4"]
+[ext_resource type="StyleBox" uid="uid://bf35mgxefx71r" path="res://resources/button_normal_stylebox.tres" id="9_2cqfq"]
+[ext_resource type="Script" uid="uid://ceawyxiw8mrlc" path="res://ui/scripts/ui_button.gd" id="9_w48qg"]
+[ext_resource type="StyleBox" uid="uid://dkhcrh8ilgcwy" path="res://resources/button_hilight_stylebox.tres" id="10_yaehf"]
+[ext_resource type="Script" uid="uid://dh8s86qwu8men" path="res://ui/start_button.gd" id="11_yaehf"]
+[ext_resource type="Script" uid="uid://bo2dtq7tfgqww" path="res://ui/level_select_button.gd" id="12_074og"]
+[ext_resource type="Script" uid="uid://d208p13xfw2y8" path="res://ui/scores_button.gd" id="13_getpj"]
 [ext_resource type="AudioStream" uid="uid://bag1w4lfktakf" path="res://assets/bgm/Curiosity (Black).mp3" id="14_2cqfq"]
+[ext_resource type="Script" uid="uid://duo0kpv72n8yh" path="res://ui/credits_button.gd" id="14_82xsv"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_lqcak"]
 shader = ExtResource("2_h2yge")
@@ -38,6 +47,7 @@ shader_parameter/vignette_opacity = 0.3650000173375
 
 [node name="Main" type="Node" unique_id=678261277]
 process_mode = 3
+script = ExtResource("1_dg77c")
 
 [node name="SubViewportContainer" type="SubViewportContainer" parent="." unique_id=408789612]
 anchors_preset = 15
@@ -60,7 +70,17 @@ process_mode = 1
 [node name="CanvasLayer" type="CanvasLayer" parent="SubViewportContainer/GameViewport" unique_id=489632269]
 process_mode = 1
 
-[node name="TurnCountContainer" type="MarginContainer" parent="SubViewportContainer/GameViewport/CanvasLayer" unique_id=83411827 groups=["pause_hidden"]]
+[node name="HUD" type="Control" parent="SubViewportContainer/GameViewport/CanvasLayer" unique_id=1992941805]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TurnCountContainer" type="MarginContainer" parent="SubViewportContainer/GameViewport/CanvasLayer/HUD" unique_id=83411827 groups=["pause_hidden"]]
+layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -71,7 +91,7 @@ theme_override_constants/margin_top = 18
 theme_override_constants/margin_right = 18
 theme_override_constants/margin_bottom = 18
 
-[node name="TurnCounter" type="Label" parent="SubViewportContainer/GameViewport/CanvasLayer/TurnCountContainer" unique_id=1573518456]
+[node name="TurnCounter" type="Label" parent="SubViewportContainer/GameViewport/CanvasLayer/HUD/TurnCountContainer" unique_id=1573518456]
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
@@ -81,30 +101,15 @@ theme_override_font_sizes/font_size = 10
 text = "Turn 0"
 script = ExtResource("2_7mycd")
 
-[node name="LoadingContainer" type="CenterContainer" parent="SubViewportContainer/GameViewport/CanvasLayer" unique_id=168188937]
+[node name="ResetContainer" type="CenterContainer" parent="SubViewportContainer/GameViewport/CanvasLayer/HUD" unique_id=2103557865 groups=["pause_hidden"]]
+layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="LoadingLabel" type="Label" parent="SubViewportContainer/GameViewport/CanvasLayer/LoadingContainer" unique_id=1670194266]
-visible = false
-layout_mode = 2
-theme_override_colors/font_color = Color(0.07058824, 0.53333336, 0.28627452, 1)
-theme_override_fonts/font = ExtResource("4_kek77")
-theme_override_font_sizes/font_size = 14
-text = "Loading..."
-script = ExtResource("4_5vw27")
-
-[node name="ResetContainer" type="CenterContainer" parent="SubViewportContainer/GameViewport/CanvasLayer" unique_id=2103557865 groups=["pause_hidden"]]
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="ResetLabel" type="Label" parent="SubViewportContainer/GameViewport/CanvasLayer/ResetContainer" unique_id=1708257448]
+[node name="ResetLabel" type="Label" parent="SubViewportContainer/GameViewport/CanvasLayer/HUD/ResetContainer" unique_id=1708257448]
 visible = false
 layout_mode = 2
 theme_override_colors/font_color = Color(0.9882353, 0.9882353, 0.9490196, 1)
@@ -116,7 +121,240 @@ theme_override_font_sizes/font_size = 14
 text = "Resetting"
 script = ExtResource("6_4c57u")
 
-[node name="PauseMenuMargin" parent="SubViewportContainer/GameViewport/CanvasLayer" unique_id=789137003 instance=ExtResource("7_efxa6")]
+[node name="LoadingScreen" type="CenterContainer" parent="SubViewportContainer/GameViewport/CanvasLayer" unique_id=168188937]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="LoadingLabel" type="Label" parent="SubViewportContainer/GameViewport/CanvasLayer/LoadingScreen" unique_id=1670194266]
+visible = false
+layout_mode = 2
+theme_override_colors/font_color = Color(0.07058824, 0.53333336, 0.28627452, 1)
+theme_override_fonts/font = ExtResource("4_kek77")
+theme_override_font_sizes/font_size = 14
+text = "Loading..."
+script = ExtResource("4_5vw27")
+
+[node name="MainMenu" type="Control" parent="SubViewportContainer/GameViewport/CanvasLayer" unique_id=729350236]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MenuMargin" type="MarginContainer" parent="SubViewportContainer/GameViewport/CanvasLayer/MainMenu" unique_id=1362660116]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="PanelContainer" type="PanelContainer" parent="SubViewportContainer/GameViewport/CanvasLayer/MainMenu/MenuMargin" unique_id=1262309519]
+layout_mode = 2
+theme_override_styles/panel = ExtResource("8_ycdy4")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/GameViewport/CanvasLayer/MainMenu/MenuMargin/PanelContainer" unique_id=1277988413]
+layout_mode = 2
+alignment = 1
+
+[node name="StartButton" type="Button" parent="SubViewportContainer/GameViewport/CanvasLayer/MainMenu/MenuMargin/PanelContainer/VBoxContainer" unique_id=2120775704 node_paths=PackedStringArray("button_label")]
+custom_minimum_size = Vector2(204, 18)
+custom_maximum_size = Vector2(204, -1)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_styles/normal = ExtResource("9_2cqfq")
+theme_override_styles/pressed = ExtResource("9_2cqfq")
+theme_override_styles/hover = ExtResource("10_yaehf")
+theme_override_styles/disabled = ExtResource("9_2cqfq")
+theme_override_styles/focus = ExtResource("10_yaehf")
+script = ExtResource("11_yaehf")
+button_label = NodePath("Label")
+metadata/_custom_type_script = "uid://ceawyxiw8mrlc"
+
+[node name="Label" type="Label" parent="SubViewportContainer/GameViewport/CanvasLayer/MainMenu/MenuMargin/PanelContainer/VBoxContainer/StartButton" unique_id=339067581]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+offset_transform_enabled = true
+offset_transform_position = Vector2(2, 1)
+theme_override_fonts/font = ExtResource("4_kek77")
+text = "START"
+horizontal_alignment = 1
+
+[node name="LevelSelectButton" type="Button" parent="SubViewportContainer/GameViewport/CanvasLayer/MainMenu/MenuMargin/PanelContainer/VBoxContainer" unique_id=2079136006 node_paths=PackedStringArray("button_label")]
+custom_minimum_size = Vector2(204, 18)
+custom_maximum_size = Vector2(204, -1)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_styles/normal = ExtResource("9_2cqfq")
+theme_override_styles/pressed = ExtResource("9_2cqfq")
+theme_override_styles/hover = ExtResource("10_yaehf")
+theme_override_styles/disabled = ExtResource("9_2cqfq")
+theme_override_styles/focus = ExtResource("10_yaehf")
+script = ExtResource("12_074og")
+button_label = NodePath("Label")
+metadata/_custom_type_script = "uid://ceawyxiw8mrlc"
+
+[node name="Label" type="Label" parent="SubViewportContainer/GameViewport/CanvasLayer/MainMenu/MenuMargin/PanelContainer/VBoxContainer/LevelSelectButton" unique_id=383438106]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+offset_transform_enabled = true
+offset_transform_position = Vector2(2, 1)
+theme_override_fonts/font = ExtResource("4_kek77")
+text = "LEVEL SELECT"
+horizontal_alignment = 1
+
+[node name="ScoresButton" type="Button" parent="SubViewportContainer/GameViewport/CanvasLayer/MainMenu/MenuMargin/PanelContainer/VBoxContainer" unique_id=30925509 node_paths=PackedStringArray("button_label")]
+custom_minimum_size = Vector2(204, 18)
+custom_maximum_size = Vector2(204, -1)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_styles/normal = ExtResource("9_2cqfq")
+theme_override_styles/pressed = ExtResource("9_2cqfq")
+theme_override_styles/hover = ExtResource("10_yaehf")
+theme_override_styles/disabled = ExtResource("9_2cqfq")
+theme_override_styles/focus = ExtResource("10_yaehf")
+script = ExtResource("13_getpj")
+button_label = NodePath("Label")
+metadata/_custom_type_script = "uid://ceawyxiw8mrlc"
+
+[node name="Label" type="Label" parent="SubViewportContainer/GameViewport/CanvasLayer/MainMenu/MenuMargin/PanelContainer/VBoxContainer/ScoresButton" unique_id=1856048041]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+offset_transform_enabled = true
+offset_transform_position = Vector2(2, 1)
+theme_override_fonts/font = ExtResource("4_kek77")
+text = "HI SCORES"
+horizontal_alignment = 1
+
+[node name="CreditsButton" type="Button" parent="SubViewportContainer/GameViewport/CanvasLayer/MainMenu/MenuMargin/PanelContainer/VBoxContainer" unique_id=642371026 node_paths=PackedStringArray("button_label")]
+custom_minimum_size = Vector2(204, 18)
+custom_maximum_size = Vector2(204, -1)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_styles/normal = ExtResource("9_2cqfq")
+theme_override_styles/pressed = ExtResource("9_2cqfq")
+theme_override_styles/hover = ExtResource("10_yaehf")
+theme_override_styles/disabled = ExtResource("9_2cqfq")
+theme_override_styles/focus = ExtResource("10_yaehf")
+script = ExtResource("14_82xsv")
+button_label = NodePath("Label")
+metadata/_custom_type_script = "uid://ceawyxiw8mrlc"
+
+[node name="Label" type="Label" parent="SubViewportContainer/GameViewport/CanvasLayer/MainMenu/MenuMargin/PanelContainer/VBoxContainer/CreditsButton" unique_id=216760122]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+offset_transform_enabled = true
+offset_transform_position = Vector2(2, 1)
+theme_override_fonts/font = ExtResource("4_kek77")
+text = "CREDITS"
+horizontal_alignment = 1
+
+[node name="OptionsButton" type="Button" parent="SubViewportContainer/GameViewport/CanvasLayer/MainMenu/MenuMargin/PanelContainer/VBoxContainer" unique_id=1757103872]
+custom_minimum_size = Vector2(204, 18)
+custom_maximum_size = Vector2(204, -1)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_styles/normal = ExtResource("9_2cqfq")
+theme_override_styles/pressed = ExtResource("9_2cqfq")
+theme_override_styles/hover = ExtResource("10_yaehf")
+theme_override_styles/disabled = ExtResource("9_2cqfq")
+theme_override_styles/focus = ExtResource("10_yaehf")
+script = ExtResource("9_w48qg")
+metadata/_custom_type_script = "uid://ceawyxiw8mrlc"
+
+[node name="Label" type="Label" parent="SubViewportContainer/GameViewport/CanvasLayer/MainMenu/MenuMargin/PanelContainer/VBoxContainer/OptionsButton" unique_id=946074257]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+offset_transform_enabled = true
+offset_transform_position = Vector2(2, 1)
+theme_override_fonts/font = ExtResource("4_kek77")
+text = "OPTIONS"
+horizontal_alignment = 1
+
+[node name="QuitButton" type="Button" parent="SubViewportContainer/GameViewport/CanvasLayer/MainMenu/MenuMargin/PanelContainer/VBoxContainer" unique_id=458669094 node_paths=PackedStringArray("button_label")]
+custom_minimum_size = Vector2(204, 18)
+custom_maximum_size = Vector2(204, -1)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_styles/normal = ExtResource("9_2cqfq")
+theme_override_styles/pressed = ExtResource("9_2cqfq")
+theme_override_styles/hover = ExtResource("10_yaehf")
+theme_override_styles/disabled = ExtResource("9_2cqfq")
+theme_override_styles/focus = ExtResource("10_yaehf")
+script = ExtResource("9_w48qg")
+button_label = NodePath("Label")
+metadata/_custom_type_script = "uid://ceawyxiw8mrlc"
+
+[node name="Label" type="Label" parent="SubViewportContainer/GameViewport/CanvasLayer/MainMenu/MenuMargin/PanelContainer/VBoxContainer/QuitButton" unique_id=1631288978]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+offset_transform_enabled = true
+offset_transform_position = Vector2(2, 1)
+theme_override_fonts/font = ExtResource("4_kek77")
+text = "QUIT"
+horizontal_alignment = 1
+
+[node name="LevelSelect" type="Control" parent="SubViewportContainer/GameViewport/CanvasLayer" unique_id=1029223203]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ScoresScreen" type="Control" parent="SubViewportContainer/GameViewport/CanvasLayer" unique_id=1552324926]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="PauseMenu" parent="SubViewportContainer/GameViewport/CanvasLayer" unique_id=789137003 instance=ExtResource("7_efxa6")]
+visible = false
+
+[node name="Credits" type="Control" parent="SubViewportContainer/GameViewport/CanvasLayer" unique_id=2022805024]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="RetroFX" type="ColorRect" parent="." unique_id=83901378]
 process_mode = 3

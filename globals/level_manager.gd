@@ -10,6 +10,7 @@ signal level_reset
 var _game: Game
 var current_level: int = -1
 var level_list: Array[PackedScene] = []
+var level_numbers: Array[int] = []
 var load_delay: float = 1.2
 var empty_level_scene: PackedScene = preload(Constants.EMPTY_LEVEL_FILE)
 var turn: int = 0
@@ -52,6 +53,9 @@ func _ready() -> void:
 		if level_number < 0:
 			continue
 
+		if not level_number in level_numbers:
+			level_numbers.append(level_number)
+
 		levels.append({
 			"level_number": level_number,
 			"scene": scene
@@ -60,6 +64,8 @@ func _ready() -> void:
 		highest_level_number = maxi(highest_level_number, level_number)
 
 	level_list.resize(highest_level_number + 1)
+
+	level_numbers.sort()
 
 	for level_data in levels:
 		var level_number: int = level_data["level_number"]
@@ -152,6 +158,20 @@ func clear_level() -> void:
 	turn_updated.emit()
 
 	level_cleared.emit()
+
+func has_level(level_number: int) -> bool:
+	return level_number in level_numbers
+
+func get_level_numbers() -> Array[int]:
+	return level_numbers
+
+func get_next_level_number(prev_level_number: int) -> int:
+	var index: int = level_numbers.find(prev_level_number)
+
+	if index < 0 or index + 1 >= level_numbers.size():
+		return -1
+
+	return level_numbers[index + 1]
 
 func _load_level(level_number: int) -> bool:
 

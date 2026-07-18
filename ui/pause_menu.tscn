@@ -1,31 +1,16 @@
 [gd_scene format=3 uid="uid://byqllygbpjoex"]
 
-[ext_resource type="Texture2D" uid="uid://c5xvwp6ribk70" path="res://assets/gfx/menu_9_tile.png" id="1_lpidc"]
+[ext_resource type="StyleBox" uid="uid://cq833l8pvty1x" path="res://resources/menu_panel_style.tres" id="1_lpidc"]
 [ext_resource type="FontFile" uid="uid://drthcd0jndmhp" path="res://assets/fonts/Everyday_Slight_Original.ttf" id="2_b1mq0"]
 [ext_resource type="Texture2D" uid="uid://c47p31t6810cw" path="res://assets/gfx/slider_grab.png" id="3_reb5t"]
 [ext_resource type="Texture2D" uid="uid://dcmnnar76yp6" path="res://assets/gfx/slider_grab_hilight.png" id="4_jcxce"]
 [ext_resource type="Texture2D" uid="uid://bdo8pipwpcyy" path="res://assets/gfx/slider_line.png" id="5_72dg2"]
 [ext_resource type="Script" uid="uid://rw0vq0c2xyrj" path="res://ui/scripts/master_vol_slider.gd" id="6_0vwb3"]
 [ext_resource type="Script" uid="uid://ohj8d46kr0nx" path="res://ui/scripts/volume_slider.gd" id="7_xnge7"]
-[ext_resource type="Texture2D" uid="uid://cn5jvipeic1db" path="res://assets/gfx/button_9_tile.png" id="8_ii2nf"]
-[ext_resource type="Texture2D" uid="uid://cfmx3f72rohly" path="res://assets/gfx/button_9_tile_hilight.png" id="9_155x5"]
+[ext_resource type="StyleBox" uid="uid://bf35mgxefx71r" path="res://resources/button_normal_stylebox.tres" id="8_lpidc"]
+[ext_resource type="StyleBox" uid="uid://dkhcrh8ilgcwy" path="res://resources/button_hilight_stylebox.tres" id="9_b1mq0"]
 [ext_resource type="Script" uid="uid://caa11euikrmh" path="res://ui/scripts/main_menu_button.gd" id="10_2thiu"]
 [ext_resource type="Script" uid="uid://csu01hxwehb4q" path="res://ui/scripts/reset_config_button.gd" id="11_5abbn"]
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_efxa6"]
-content_margin_left = 3.0
-content_margin_top = 3.0
-content_margin_right = 3.0
-content_margin_bottom = 3.0
-texture = ExtResource("1_lpidc")
-texture_margin_left = 12.0
-texture_margin_top = 12.0
-texture_margin_right = 12.0
-texture_margin_bottom = 12.0
-expand_margin_left = 6.0
-expand_margin_top = 6.0
-expand_margin_right = 6.0
-expand_margin_bottom = 6.0
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_vivmo"]
 content_margin_top = 6.0
@@ -38,24 +23,6 @@ axis_stretch_horizontal = 1
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_2cqfq"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_yaehf"]
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_yaehf"]
-texture = ExtResource("8_ii2nf")
-texture_margin_left = 12.0
-texture_margin_top = 12.0
-texture_margin_right = 12.0
-texture_margin_bottom = 12.0
-axis_stretch_horizontal = 2
-axis_stretch_vertical = 2
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_074og"]
-texture = ExtResource("9_155x5")
-texture_margin_left = 12.0
-texture_margin_top = 12.0
-texture_margin_right = 12.0
-texture_margin_bottom = 12.0
-axis_stretch_horizontal = 2
-axis_stretch_vertical = 2
 
 [node name="PauseMenuMargin" type="MarginContainer" unique_id=789137003 groups=["pause_shown"]]
 process_mode = 2
@@ -73,7 +40,7 @@ theme_override_constants/margin_bottom = 36
 
 [node name="PauseMenuPanel" type="PanelContainer" parent="." unique_id=307505102]
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxTexture_efxa6")
+theme_override_styles/panel = ExtResource("1_lpidc")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="PauseMenuPanel" unique_id=1765251634]
 layout_mode = 2
@@ -237,11 +204,11 @@ custom_minimum_size = Vector2(96, 18)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 8
-theme_override_styles/normal = SubResource("StyleBoxTexture_yaehf")
-theme_override_styles/pressed = SubResource("StyleBoxTexture_yaehf")
-theme_override_styles/hover = SubResource("StyleBoxTexture_074og")
-theme_override_styles/disabled = SubResource("StyleBoxTexture_yaehf")
-theme_override_styles/focus = SubResource("StyleBoxTexture_074og")
+theme_override_styles/normal = ExtResource("8_lpidc")
+theme_override_styles/pressed = ExtResource("8_lpidc")
+theme_override_styles/hover = ExtResource("9_b1mq0")
+theme_override_styles/disabled = ExtResource("8_lpidc")
+theme_override_styles/focus = ExtResource("9_b1mq0")
 script = ExtResource("10_2thiu")
 button_label = NodePath("MainMenuButton")
 metadata/_custom_type_script = "uid://ceawyxiw8mrlc"
@@ -266,11 +233,11 @@ custom_minimum_size = Vector2(96, 18)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 8
-theme_override_styles/normal = SubResource("StyleBoxTexture_yaehf")
-theme_override_styles/pressed = SubResource("StyleBoxTexture_yaehf")
-theme_override_styles/hover = SubResource("StyleBoxTexture_074og")
-theme_override_styles/disabled = SubResource("StyleBoxTexture_yaehf")
-theme_override_styles/focus = SubResource("StyleBoxTexture_074og")
+theme_override_styles/normal = ExtResource("8_lpidc")
+theme_override_styles/pressed = ExtResource("8_lpidc")
+theme_override_styles/hover = ExtResource("9_b1mq0")
+theme_override_styles/disabled = ExtResource("8_lpidc")
+theme_override_styles/focus = ExtResource("9_b1mq0")
 script = ExtResource("11_5abbn")
 button_label = NodePath("ResetAudioLabel")
 metadata/_custom_type_script = "uid://ceawyxiw8mrlc"

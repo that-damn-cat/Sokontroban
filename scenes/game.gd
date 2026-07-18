@@ -19,7 +19,6 @@ enum PlaybackKind {
 @export var level: Level
 @export var turn_cooldown_seconds: float = 0.05
 @export var max_history_steps: int = 250
-@export_range(0, 50) var starting_level: int = 0
 
 var turn_in_process: bool = false
 var player: Player
@@ -52,9 +51,6 @@ func _ready() -> void:
 
 	LevelManager.set_game(self)
 	LevelManager.levels_exhausted.connect(_on_levels_exhausted)
-
-	LevelManager.current_level = starting_level - 1
-	LevelManager.load_next_level(false)
 
 func _exit_tree() -> void:
 	if is_instance_valid(_history):

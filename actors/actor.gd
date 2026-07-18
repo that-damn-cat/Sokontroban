@@ -56,7 +56,7 @@ func _find_speed_mult(anim_name: StringName, target_duration: float) -> float:
 	var anim_duration: float = 0.0
 
 	for i in range(sprite_frames.get_frame_count(anim_name)):
-		var frame_duration: float = sprite_frames.get_frame_duration(anim_name, is_playing())
+		var frame_duration: float = sprite_frames.get_frame_duration(anim_name, i)
 		anim_duration += frame_duration / anim_fps
 
 	return(anim_duration / target_duration)
