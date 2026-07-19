@@ -1,0 +1,81 @@
+[gd_scene format=3 uid="uid://d33js6k56er7a"]
+
+[ext_resource type="FontFile" uid="uid://drthcd0jndmhp" path="res://assets/fonts/Everyday_Slight_Original.ttf" id="1_kyt4p"]
+[ext_resource type="Script" uid="uid://dg5q88q00q7e4" path="res://ui/scripts/turn_number_label.gd" id="2_cteo0"]
+[ext_resource type="Script" uid="uid://s1j30nda22ct" path="res://ui/scripts/level_name.gd" id="3_gko4y"]
+[ext_resource type="FontFile" uid="uid://cr3vfu8wn8l5p" path="res://assets/fonts/Everyday_Typical_Bold.ttf" id="4_efhw2"]
+[ext_resource type="Script" uid="uid://dws4wtexwqcex" path="res://ui/scripts/reset_label.gd" id="5_gyx8c"]
+
+[node name="HUD" type="Control" unique_id=687698106]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TurnCountContainer" type="MarginContainer" parent="." unique_id=1254475495 groups=["pause_hidden"]]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 15
+
+[node name="TurnCounter" type="Label" parent="TurnCountContainer" unique_id=1097118814]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+theme_override_colors/font_color = Color(0.07058824, 0.53333336, 0.28627452, 1)
+theme_override_fonts/font = ExtResource("1_kyt4p")
+theme_override_font_sizes/font_size = 10
+text = "Turn 0"
+script = ExtResource("2_cteo0")
+
+[node name="LevelNameContainer" type="MarginContainer" parent="." unique_id=1731588278 groups=["pause_hidden"]]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 15
+
+[node name="LevelName" type="Label" parent="LevelNameContainer" unique_id=809834410]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 8
+offset_transform_enabled = true
+offset_transform_position = Vector2(1, 5)
+theme_override_colors/font_color = Color(0.07058824, 0.53333336, 0.28627452, 1)
+theme_override_fonts/font = ExtResource("1_kyt4p")
+theme_override_font_sizes/font_size = 10
+text = "21 - Final Exam"
+vertical_alignment = 1
+script = ExtResource("3_gko4y")
+
+[node name="ResetContainer" type="CenterContainer" parent="." unique_id=1680475266 groups=["pause_hidden"]]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ResetLabel" type="Label" parent="ResetContainer" unique_id=1199994837]
+visible = false
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9882353, 0.9882353, 0.9490196, 1)
+theme_override_colors/font_outline_color = Color(0.0627451, 0.0627451, 0.0627451, 1)
+theme_override_constants/line_spacing = 6
+theme_override_constants/outline_size = 6
+theme_override_fonts/font = ExtResource("4_efhw2")
+theme_override_font_sizes/font_size = 14
+script = ExtResource("5_gyx8c")

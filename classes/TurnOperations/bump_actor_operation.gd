@@ -33,4 +33,4 @@ func play_forward(_game: Game) -> Tween:
 	return _actor.play_bump_animation(_direction)
 
 func play_reverse(_game: Game) -> Tween:
-	return null
+	return play_forward(_game)

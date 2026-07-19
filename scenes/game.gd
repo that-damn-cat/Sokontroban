@@ -31,6 +31,8 @@ var _history: UndoRedo = UndoRedo.new()
 var _playback_kind := PlaybackKind.NONE
 var _playback_generation: int = 0
 var _level_complete: bool = false
+var _undo_held: bool = false
+var _undo_repeat_remaining: float = 0.0
 
 func _ready() -> void:
 	_history.max_steps = max_history_steps
@@ -51,9 +53,29 @@ func _unhandled_input(event: InputEvent) -> void:
 		return
 
 	if event.is_action_pressed(&"undo"):
-		undo_turn()
+		_start_undo_hold()
+		get_viewport().set_input_as_handled()
+	elif event.is_action_released(&"undo"):
+		_stop_undo_hold()
 		get_viewport().set_input_as_handled()
 
+func _process(delta: float) -> void:
+	if not gameplay_enabled or _level_complete:
+		_stop_undo_hold()
+		return
+
+	if not _undo_held:
+		return
+
+	if not Input.is_action_pressed(&"undo"):
+		_stop_undo_hold()
+		return
+
+	_undo_repeat_remaining -= delta
+
+	if _undo_repeat_remaining <= 0.0:
+		_undo_repeat_remaining += Constants.UNDO_REPEAT_INTERVAL
+		undo_turn()
 
 func set_level(new_level: Level) -> void:
 	level = new_level
@@ -427,3 +449,15 @@ func _on_level_complete() -> void:
 
 func _reset_allowed_inputs() -> void:
 	allowed_inputs.clear()
+
+func _start_undo_hold() -> void:
+	if _undo_held:
+		return
+
+	_undo_held = true
+	_undo_repeat_remaining = Constants.UNDO_REPEAT_DELAY
+	undo_turn()
+
+func _stop_undo_hold() -> void:
+	_undo_held = false
+	_undo_repeat_remaining = 0.0

@@ -147,19 +147,15 @@ func clear_level() -> void:
 	_destroy_current_level(current_level >= 0)
 	_ensure_empty_level()
 
-
 func quit_level() -> void:
 	clear_level()
 	level_quit.emit()
 
-
 func has_level(level_number: int) -> bool:
 	return _level_scenes.has(level_number)
 
-
 func get_level_numbers() -> Array[int]:
 	return level_numbers.duplicate()
-
 
 func get_first_level_number() -> int:
 	if level_numbers.is_empty():
@@ -167,10 +163,8 @@ func get_first_level_number() -> int:
 
 	return level_numbers[0]
 
-
 func get_level_title(level_number: int) -> String:
 	return _level_titles.get(level_number, "Level %02d" % level_number)
-
 
 func get_next_level_number(previous_level_number: int) -> int:
 	var index := level_numbers.find(previous_level_number)
