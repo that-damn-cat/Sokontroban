@@ -77,6 +77,7 @@ func focus_default() -> void:
 
 
 func _on_level_button_pressed(level_number: int) -> void:
+	SFXService.play("click")
 	level_selected.emit(level_number)
 
 
@@ -85,4 +86,5 @@ func _on_score_changed(_level_number: int) -> void:
 
 
 func _on_back_pressed() -> void:
+	SFXService.play("click")
 	back_requested.emit()

@@ -40,15 +40,19 @@ func _get_buttons() -> Array[Button]:
 
 
 func _on_start_pressed() -> void:
+	SFXService.play("click")
 	start_requested.emit()
 
 func _on_level_select_pressed() -> void:
+	SFXService.play("click")
 	level_select_requested.emit()
 
 func _on_scores_pressed() -> void:
+	SFXService.play("click")
 	scores_requested.emit()
 
 func _on_options_pressed() -> void:
+	SFXService.play("click")
 	options_requested.emit()
 
 func _on_quit_pressed() -> void:

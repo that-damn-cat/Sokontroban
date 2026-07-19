@@ -43,6 +43,7 @@ level=""
 player=""
 pause_hidden=""
 pause_shown=""
+main_controller=""
 
 [input]
 

@@ -7,4 +7,5 @@ func _ready() -> void:
 
 
 func _on_button_pressed() -> void:
+	SFXService.play("click")
 	SaveDataManager.reset_config()

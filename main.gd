@@ -103,6 +103,7 @@ func show_main_menu() -> void:
 
 func handle_pause_menu_return() -> void:
 	show_main_menu()
+	SFXService.play("click")
 
 
 func _connect_screen_signals() -> void:
@@ -119,6 +120,8 @@ func _connect_screen_signals() -> void:
 
 
 func _on_start_requested() -> void:
+	SFXService.play.bind("click").call_deferred()
+
 	var level_number := SaveDataManager.get_continue_level(LevelManager.get_level_numbers())
 
 	if level_number < 0:

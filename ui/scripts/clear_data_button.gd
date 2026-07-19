@@ -12,4 +12,5 @@ func _update_visibility() -> void:
 	visible = SaveDataManager.has_progress()
 
 func _on_button_pressed() -> void:
+	SFXService.play("click")
 	SaveDataManager.reset_progress()

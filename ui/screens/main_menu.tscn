@@ -28,7 +28,7 @@ shader_parameter/transparent_amount = 0.3950000187625
 shader_parameter/feather = 0.0
 shader_parameter/angle_degrees = 157.50000748125
 
-[node name="MainMenu" type="Control" unique_id=1622664951 node_paths=PackedStringArray("start_button", "level_select_button", "scores_button", "options_button", "quit_button")]
+[node name="MainMenu" type="Control" unique_id=1622664951 node_paths=PackedStringArray("start_button", "level_select_button", "scores_button", "options_button", "quit_button") groups=["main_controller"]]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
