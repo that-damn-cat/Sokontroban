@@ -30,6 +30,8 @@ func _ready() -> void:
 	_game.undo_finished.connect(_on_turn_undone)
 	_game.redo_finished.connect(_on_forward_turn_finished)
 
+	call_deferred("_activate_camera")
+
 func _input(event: InputEvent) -> void:
 	if not LevelManager.reset_enabled:
 		return
@@ -203,3 +205,25 @@ func _on_forward_turn_finished() -> void:
 
 func _on_turn_undone() -> void:
 	clear_input_feedback()
+
+func _activate_camera() -> void:
+	var active_camera: Camera2D = camera_node
+
+	# Levels without a dedicated camera use the player's camera.
+	if (
+		not is_instance_valid(active_camera)
+		and is_instance_valid(_game)
+		and is_instance_valid(_game.player)
+	):
+		active_camera = _game.player.camera
+
+	if not is_instance_valid(active_camera):
+		return
+
+	active_camera.enabled = true
+	active_camera.make_current()
+
+	# Reset drag-margin and smoothing state to the camera's current target.
+	active_camera.align()
+	active_camera.reset_smoothing()
+	active_camera.force_update_scroll()

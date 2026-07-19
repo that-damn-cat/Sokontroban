@@ -1,0 +1,255 @@
+[gd_scene format=3 uid="uid://owteidy261ks"]
+
+[ext_resource type="Script" uid="uid://32l46tcnuam1" path="res://ui/screens/main_menu_screen.gd" id="1_0f3jv"]
+[ext_resource type="StyleBox" uid="uid://cq833l8pvty1x" path="res://resources/menu_panel_style.tres" id="2_gn8gv"]
+[ext_resource type="Texture2D" uid="uid://b3h7ahy47et82" path="res://assets/gfx/sprite_big.png" id="3_dlvaj"]
+[ext_resource type="Shader" uid="uid://datqng8d68om3" path="res://shaders/fade_in.gdshader" id="3_kugh1"]
+[ext_resource type="StyleBox" uid="uid://bf35mgxefx71r" path="res://resources/button_normal_stylebox.tres" id="3_sbcjp"]
+[ext_resource type="StyleBox" uid="uid://dkhcrh8ilgcwy" path="res://resources/button_hilight_stylebox.tres" id="4_dlvaj"]
+[ext_resource type="Script" uid="uid://v0reduujwp5a" path="res://ui/scripts/title.gd" id="4_gn8gv"]
+[ext_resource type="Script" uid="uid://dh8s86qwu8men" path="res://ui/scripts/start_button.gd" id="5_kugh1"]
+[ext_resource type="Texture2D" uid="uid://cwce5p37u04kg" path="res://assets/gfx/crate_big.png" id="5_tt2na"]
+[ext_resource type="FontFile" uid="uid://cr3vfu8wn8l5p" path="res://assets/fonts/Everyday_Typical_Bold.ttf" id="6_tt2na"]
+[ext_resource type="Script" uid="uid://bo2dtq7tfgqww" path="res://ui/scripts/level_select_button.gd" id="7_44g3f"]
+[ext_resource type="Script" uid="uid://d208p13xfw2y8" path="res://ui/scripts/scores_button.gd" id="8_qsveh"]
+[ext_resource type="Script" uid="uid://ceawyxiw8mrlc" path="res://ui/scripts/ui_button.gd" id="9_jln8d"]
+[ext_resource type="Script" uid="uid://iaqaxbm0ijos" path="res://ui/scripts/clear_data_button.gd" id="10_385lg"]
+[ext_resource type="Script" uid="uid://bh5667yled1q2" path="res://ui/scripts/quit_button.gd" id="11_1ktvn"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_sbcjp"]
+shader = ExtResource("3_kugh1")
+shader_parameter/transparent_amount = 0.30000001425
+shader_parameter/feather = 0.0
+shader_parameter/angle_degrees = 22.50000106875
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_kugh1"]
+shader = ExtResource("3_kugh1")
+shader_parameter/transparent_amount = 0.3950000187625
+shader_parameter/feather = 0.0
+shader_parameter/angle_degrees = 157.50000748125
+
+[node name="MainMenu" type="Control" unique_id=1622664951 node_paths=PackedStringArray("start_button", "level_select_button", "scores_button", "options_button", "quit_button")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_0f3jv")
+start_button = NodePath("MenuMargin/PanelContainer/VBoxContainer/StartButton")
+level_select_button = NodePath("MenuMargin/PanelContainer/VBoxContainer/LevelSelectButton")
+scores_button = NodePath("MenuMargin/PanelContainer/VBoxContainer/ScoresButton")
+options_button = NodePath("MenuMargin/PanelContainer/VBoxContainer/OptionsButton")
+quit_button = NodePath("MenuMargin/PanelContainer/VBoxContainer/QuitButton")
+
+[node name="MenuMargin" type="MarginContainer" parent="." unique_id=715881278]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="PanelContainer" type="PanelContainer" parent="MenuMargin" unique_id=1070179134]
+layout_mode = 2
+theme_override_styles/panel = ExtResource("2_gn8gv")
+
+[node name="GuyTexture" type="TextureRect" parent="MenuMargin/PanelContainer" unique_id=712007919]
+material = SubResource("ShaderMaterial_sbcjp")
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 4
+offset_transform_enabled = true
+offset_transform_position = Vector2(-36, 0)
+offset_transform_rotation = -0.3926991
+texture = ExtResource("3_dlvaj")
+
+[node name="CrateTexture" type="TextureRect" parent="MenuMargin/PanelContainer" unique_id=1454504240]
+material = SubResource("ShaderMaterial_kugh1")
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 4
+offset_transform_enabled = true
+offset_transform_position = Vector2(47.45, 0)
+offset_transform_rotation = 0.3926991
+texture = ExtResource("5_tt2na")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MenuMargin/PanelContainer" unique_id=1021957706]
+layout_mode = 2
+theme_override_constants/separation = 2
+alignment = 1
+
+[node name="Title" type="RichTextLabel" parent="MenuMargin/PanelContainer/VBoxContainer" unique_id=231522862]
+layout_mode = 2
+size_flags_vertical = 3
+offset_transform_enabled = true
+theme_override_fonts/normal_font = ExtResource("6_tt2na")
+bbcode_enabled = true
+text = "[color=#1773b8]Super[/color] [color=f1b435]Block[/color] [color=fcfcf2]Pusher[/color]"
+horizontal_alignment = 1
+vertical_alignment = 1
+script = ExtResource("4_gn8gv")
+
+[node name="StartButton" type="Button" parent="MenuMargin/PanelContainer/VBoxContainer" unique_id=1146364592 node_paths=PackedStringArray("button_label")]
+custom_minimum_size = Vector2(204, 24)
+custom_maximum_size = Vector2(204, -1)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_styles/normal = ExtResource("3_sbcjp")
+theme_override_styles/pressed = ExtResource("3_sbcjp")
+theme_override_styles/hover = ExtResource("4_dlvaj")
+theme_override_styles/disabled = ExtResource("3_sbcjp")
+theme_override_styles/focus = ExtResource("4_dlvaj")
+script = ExtResource("5_kugh1")
+button_label = NodePath("Label")
+metadata/_custom_type_script = "uid://ceawyxiw8mrlc"
+
+[node name="Label" type="Label" parent="MenuMargin/PanelContainer/VBoxContainer/StartButton" unique_id=428993337]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+offset_transform_enabled = true
+offset_transform_position = Vector2(2, 1)
+theme_override_fonts/font = ExtResource("6_tt2na")
+text = "START"
+horizontal_alignment = 1
+
+[node name="LevelSelectButton" type="Button" parent="MenuMargin/PanelContainer/VBoxContainer" unique_id=1403044498 node_paths=PackedStringArray("button_label")]
+custom_minimum_size = Vector2(204, 24)
+custom_maximum_size = Vector2(204, -1)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_styles/normal = ExtResource("3_sbcjp")
+theme_override_styles/pressed = ExtResource("3_sbcjp")
+theme_override_styles/hover = ExtResource("4_dlvaj")
+theme_override_styles/disabled = ExtResource("3_sbcjp")
+theme_override_styles/focus = ExtResource("4_dlvaj")
+script = ExtResource("7_44g3f")
+button_label = NodePath("Label")
+metadata/_custom_type_script = "uid://ceawyxiw8mrlc"
+
+[node name="Label" type="Label" parent="MenuMargin/PanelContainer/VBoxContainer/LevelSelectButton" unique_id=1679533221]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+offset_transform_enabled = true
+offset_transform_position = Vector2(2, 1)
+theme_override_fonts/font = ExtResource("6_tt2na")
+text = "LEVEL SELECT"
+horizontal_alignment = 1
+
+[node name="ScoresButton" type="Button" parent="MenuMargin/PanelContainer/VBoxContainer" unique_id=648797446 node_paths=PackedStringArray("button_label")]
+custom_minimum_size = Vector2(204, 24)
+custom_maximum_size = Vector2(204, -1)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_styles/normal = ExtResource("3_sbcjp")
+theme_override_styles/pressed = ExtResource("3_sbcjp")
+theme_override_styles/hover = ExtResource("4_dlvaj")
+theme_override_styles/disabled = ExtResource("3_sbcjp")
+theme_override_styles/focus = ExtResource("4_dlvaj")
+script = ExtResource("8_qsveh")
+button_label = NodePath("Label")
+metadata/_custom_type_script = "uid://ceawyxiw8mrlc"
+
+[node name="Label" type="Label" parent="MenuMargin/PanelContainer/VBoxContainer/ScoresButton" unique_id=814544045]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+offset_transform_enabled = true
+offset_transform_position = Vector2(2, 1)
+theme_override_fonts/font = ExtResource("6_tt2na")
+text = "HI SCORES"
+horizontal_alignment = 1
+
+[node name="OptionsButton" type="Button" parent="MenuMargin/PanelContainer/VBoxContainer" unique_id=611876318]
+custom_minimum_size = Vector2(204, 24)
+custom_maximum_size = Vector2(204, -1)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_styles/normal = ExtResource("3_sbcjp")
+theme_override_styles/pressed = ExtResource("3_sbcjp")
+theme_override_styles/hover = ExtResource("4_dlvaj")
+theme_override_styles/disabled = ExtResource("3_sbcjp")
+theme_override_styles/focus = ExtResource("4_dlvaj")
+script = ExtResource("9_jln8d")
+metadata/_custom_type_script = "uid://ceawyxiw8mrlc"
+
+[node name="Label" type="Label" parent="MenuMargin/PanelContainer/VBoxContainer/OptionsButton" unique_id=2124641158]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+offset_transform_enabled = true
+offset_transform_position = Vector2(2, 1)
+theme_override_fonts/font = ExtResource("6_tt2na")
+text = "OPTIONS"
+horizontal_alignment = 1
+
+[node name="ClearDataButton" type="Button" parent="MenuMargin/PanelContainer/VBoxContainer" unique_id=635205737]
+custom_minimum_size = Vector2(204, 24)
+custom_maximum_size = Vector2(204, -1)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_styles/normal = ExtResource("3_sbcjp")
+theme_override_styles/pressed = ExtResource("3_sbcjp")
+theme_override_styles/hover = ExtResource("4_dlvaj")
+theme_override_styles/disabled = ExtResource("3_sbcjp")
+theme_override_styles/focus = ExtResource("4_dlvaj")
+script = ExtResource("10_385lg")
+metadata/_custom_type_script = "uid://ceawyxiw8mrlc"
+
+[node name="Label" type="Label" parent="MenuMargin/PanelContainer/VBoxContainer/ClearDataButton" unique_id=53797166]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+offset_transform_enabled = true
+offset_transform_position = Vector2(2, 1)
+theme_override_fonts/font = ExtResource("6_tt2na")
+text = "RESET SAVE"
+horizontal_alignment = 1
+
+[node name="QuitButton" type="Button" parent="MenuMargin/PanelContainer/VBoxContainer" unique_id=1920977153 node_paths=PackedStringArray("button_label")]
+custom_minimum_size = Vector2(204, 24)
+custom_maximum_size = Vector2(204, -1)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_styles/normal = ExtResource("3_sbcjp")
+theme_override_styles/pressed = ExtResource("3_sbcjp")
+theme_override_styles/hover = ExtResource("4_dlvaj")
+theme_override_styles/disabled = ExtResource("3_sbcjp")
+theme_override_styles/focus = ExtResource("4_dlvaj")
+script = ExtResource("11_1ktvn")
+button_label = NodePath("Label")
+metadata/_custom_type_script = "uid://ceawyxiw8mrlc"
+
+[node name="Label" type="Label" parent="MenuMargin/PanelContainer/VBoxContainer/QuitButton" unique_id=310128401]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+offset_transform_enabled = true
+offset_transform_position = Vector2(2, 1)
+theme_override_fonts/font = ExtResource("6_tt2na")
+text = "QUIT"
+horizontal_alignment = 1

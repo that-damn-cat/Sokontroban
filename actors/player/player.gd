@@ -33,6 +33,7 @@ func _enter_tree() -> void:
 
 	if _game.level.has_level_camera():
 		if is_instance_valid(camera):
+			camera.enabled = false
 			camera.free()
 		return
 
@@ -41,11 +42,10 @@ func _enter_tree() -> void:
 		push_error("Player Camera Missing!")
 		return
 
-	camera_target.global_position = global_position
-	camera.position_smoothing_enabled = false
-	camera.global_position = global_position
-	camera.position_smoothing_enabled = true
+	camera_target.position = Vector2.ZERO
+	camera.position = Vector2.ZERO
 	camera.position_smoothing_speed = Constants.TILE_SIZE
+	camera.position_smoothing_enabled = true
 
 func _ready() -> void:
 	super()
