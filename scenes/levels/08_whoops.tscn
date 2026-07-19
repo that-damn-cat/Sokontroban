@@ -20,6 +20,7 @@ tile_set = ExtResource("1_71ld2")
 script = ExtResource("2_bmdar")
 camera_node = NodePath("Camera2D")
 level_number = 8
+level_title = "Whoops!"
 
 [node name="TextLayer" type="TileMapLayer" parent="." unique_id=813143111]
 tile_map_data = PackedByteArray("AAAcABcAAAAHAAAAAAAdABcAAAAEAAUAAAAeABcAAAAEAAUAAAAfABcAAAAEAAUAAAAgABcAAAAGAAsAAAAhABcAAAAGAAsAAAAiABcAAAAGAAsAAAA=")

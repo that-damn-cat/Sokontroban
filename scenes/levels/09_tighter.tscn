@@ -20,6 +20,7 @@ tile_set = ExtResource("1_2x8d1")
 script = ExtResource("2_l0cnc")
 camera_node = NodePath("Camera2D")
 level_number = 9
+level_title = "Tighter..."
 
 [node name="TextLayer" type="TileMapLayer" parent="." unique_id=813143111]
 tile_map_data = PackedByteArray("AAAcABcAAAAAAAAAAAAeABcAAAABAAQAAAAfABcAAAAAAAUAAAAgABcAAAADAAYAAAAdABkAAAACAAYAAAAeABkAAAAEAAUAAAAfABkAAAAAAAQAAAAgABkAAAADAAUAAAAhABkAAAADAAUAAAAiABkAAAAEAAQAAAAjABkAAAABAAYAAAAkABkAAAAGAAsAAAA=")

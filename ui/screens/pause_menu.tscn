@@ -93,7 +93,6 @@ theme_override_styles/grabber_area_highlight = SubResource("StyleBoxEmpty_yaehf"
 max_value = 1.0
 value = 1.0
 script = ExtResource("6_0vwb3")
-audio_bus = &"Master"
 metadata/_custom_type_script = "uid://ohj8d46kr0nx"
 
 [node name="MusicVolumeContainer" type="HBoxContainer" parent="PauseMenuPanel/VBoxContainer/MenuCenter/VolumeSliders" unique_id=1012028671]

@@ -21,6 +21,7 @@
 [ext_resource type="Script" uid="uid://d208p13xfw2y8" path="res://ui/scripts/scores_button.gd" id="13_getpj"]
 [ext_resource type="AudioStream" uid="uid://bag1w4lfktakf" path="res://assets/bgm/Curiosity (Black).mp3" id="14_2cqfq"]
 [ext_resource type="Script" uid="uid://iaqaxbm0ijos" path="res://ui/scripts/clear_data_button.gd" id="16_1u8w0"]
+[ext_resource type="Script" uid="uid://bh5667yled1q2" path="res://ui/scripts/quit_button.gd" id="17_0odxb"]
 [ext_resource type="Script" uid="uid://bg7f8870uxol" path="res://ui/screens/level_select_screen.gd" id="17_1u8w0"]
 [ext_resource type="Script" uid="uid://crkucvnuydbw5" path="res://ui/screens/scores_screen.gd" id="18_0odxb"]
 
@@ -314,7 +315,7 @@ theme_override_styles/pressed = ExtResource("9_2cqfq")
 theme_override_styles/hover = ExtResource("10_yaehf")
 theme_override_styles/disabled = ExtResource("9_2cqfq")
 theme_override_styles/focus = ExtResource("10_yaehf")
-script = ExtResource("9_w48qg")
+script = ExtResource("17_0odxb")
 button_label = NodePath("Label")
 metadata/_custom_type_script = "uid://ceawyxiw8mrlc"
 

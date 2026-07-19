@@ -271,6 +271,7 @@ tile_set = ExtResource("1_qyhq0")
 script = ExtResource("2_tg1k8")
 camera_node = NodePath("Camera2D")
 level_number = 6
+level_title = "Cramped Warehouse"
 
 [node name="TextLayer" type="TileMapLayer" parent="." unique_id=813143111]
 tile_map_data = PackedByteArray("AAAoAAgAAAACAAEAAAApAAgAAAAAAAUAAAAqAAgAAAAFAAUAAAArAAgAAAADAAQAAAAsAAgAAAAAAAQAAAAuAAgAAAACAAQAAAAvAAgAAAABAAYAAAAwAAgAAAAAAAQAAAAxAAgAAAAEAAUAAAAyAAgAAAAHAAUAAAAzAAgAAAAEAAQAAAA0AAgAAAADAAQAAAA1AAgAAAAGAAsAAAA2AAgAAAAGAAsAAAA3AAgAAAAGAAsAAAA=")

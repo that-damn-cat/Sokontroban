@@ -78,7 +78,7 @@ func _update_animation(play_goal_sound: bool) -> void:
 
 	if is_on_goal:
 		animation = &"on_goal"
-		if play_goal_sound and not _was_on_goal:
+		if play_goal_sound:		#and not _was_on_goal
 			SFXService.play("goal")
 
 	else:

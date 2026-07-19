@@ -32,7 +32,7 @@ const DEFAULT_AUDIO_CONFIG: Dictionary[StringName, float] = {
 
 # Game Config
 const TURN_TIME_SECONDS: float = 0.25
-const TURN_COOLDOWN_SECONDS: float = 0.05
+const TURN_COOLDOWN_SECONDS: float = 0.0
 const RESET_HOLD_TIME: float = 1.25
 const LEVEL_LOAD_DELAY: float = 1.2
 const LEVEL_COMPLETE_DELAY: float = 1.5

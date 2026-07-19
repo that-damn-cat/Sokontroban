@@ -20,8 +20,10 @@ tile_set = ExtResource("1_lmsqn")
 script = ExtResource("2_vhx76")
 camera_node = NodePath("Camera2D")
 level_number = 10
+level_title = "Order of Operations"
 
 [node name="TextLayer" type="TileMapLayer" parent="." unique_id=813143111]
+tile_map_data = PackedByteArray("AAAcAA8AAAAFAAEAAAAdAA8AAAAGAAUAAAAfAA8AAAADAAAAAAAgAA8AAAAAAAUAAAAhAA8AAAAFAAQAAAAiAA8AAAAFAAQAAAAjAA8AAAABAAoAAAA=")
 tile_set = ExtResource("3_22cwa")
 
 [node name="Actors" type="TileMapLayer" parent="." unique_id=1361058435]
@@ -34,5 +36,3 @@ drag_left_margin = 0.25
 drag_top_margin = 0.25
 drag_right_margin = 0.25
 drag_bottom_margin = 0.25
-editor_draw_screen = false
-editor_draw_drag_margin = true
